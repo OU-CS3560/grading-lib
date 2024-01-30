@@ -1,0 +1,25 @@
+[project]
+name = "cs3560-grading-lib"
+version = "0.0.1"
+description = "A common library for the grading scripts."
+readme = "README.md"
+license = {file = "LICENSE"}
+dependencies = [
+    'importlib-metadata; python_version>="3.12"',
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[project.urls]
+Homepage = "https://github.com/OU-CS3560/cs3560-grading-lib"
+Repository = "https://github.com/OU-CS3560/cs3560-grading-lib.git"
+Issues = "https://github.com/OU-CS3560/cs3560-grading-lib/issues"
+Changelog = "https://github.com/OU-CS3560/cs3560-grading-lib/blob/main/CHANGELOG.md"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.isort]
+profile = "black"
