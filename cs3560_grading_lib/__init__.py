@@ -6,6 +6,7 @@ __all__ = [
     "get_seed_from_env",
     "is_debug_mode",
     "run_executable",
+    "Makefile",
     "run_targets",
 ]
 
@@ -18,4 +19,4 @@ from .common import (
     is_debug_mode,
     run_executable,
 )
-from .makefile import run_targets
+from .makefile import Makefile, run_targets

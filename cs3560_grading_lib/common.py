@@ -11,7 +11,7 @@ FILE_NOT_EXIST_TEXT_TEMPLATE = "File '{path}' does not exist"
 
 
 def is_debug_mode(
-    variable_name="DEBUG", vals_for_true=["true", "t", "on", "1"]
+    variable_name: str = "DEBUG", vals_for_true: list[str] = ["true", "t", "on", "1"]
 ) -> bool:
     """Return True if the DEBUG envrionment variable is presence with value representing 'True'."""
     raw_val = os.environ.get(variable_name, None)
@@ -22,7 +22,7 @@ def is_debug_mode(
     return False
 
 
-def get_seed_from_env(variable_name="SEED") -> int:
+def get_seed_from_env(variable_name: str = "SEED") -> int:
     raw_val = os.environ.get(variable_name, None)
     seed_val = int(time.time())
 
@@ -90,13 +90,15 @@ class BaseTestCase(unittest.TestCase):
         self.is_debug_mode = is_debug_mode()
         self.seed = get_seed_from_env()
 
-    def assertFileExists(self, path: Path, msg_template=FILE_NOT_EXIST_TEXT_TEMPLATE):
+    def assertFileExists(
+        self, path: Path, msg_template: str = FILE_NOT_EXIST_TEXT_TEMPLATE
+    ):
         if not path.exists():
             msg = msg_template.format(path=str(path))
             raise self.failureException(msg)
 
     def assertCommandSuccessful(
-        self, result: CommandResult, msg_template=COMMAND_FAILED_TEXT_TEMPLATE
+        self, result: CommandResult, msg_template: str = COMMAND_FAILED_TEXT_TEMPLATE
     ):
         if not result.success:
             msg = msg_template.format(command=result.command, output=result.output)

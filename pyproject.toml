@@ -1,6 +1,6 @@
 [project]
 name = "cs3560-grading-lib"
-version = "0.0.1"
+version = "0.0.3a1"
 description = "A common library for the grading scripts."
 readme = "README.md"
 license = { file = "LICENSE" }
