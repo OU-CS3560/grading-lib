@@ -1,3 +1,4 @@
+import datetime
 import os
 import subprocess
 import time
@@ -34,6 +35,18 @@ def get_seed_from_env(variable_name: str = "SEED") -> int:
             pass
 
     return seed_val
+
+
+def get_mtime_as_datetime(path: Path | str) -> datetime.datetime:
+    if isinstance(path, str):
+        path = Path(path)
+
+    return datetime.datetime.fromtimestamp(path.stat().st_mtime, tz=datetime.UTC)
+
+
+def has_file_changed(last_known_mtime: datetime.datetime, path: Path | str) -> bool:
+    new_mtime = get_mtime_as_datetime(path)
+    return new_mtime > last_known_mtime
 
 
 CommandResult = namedtuple("CommandResult", ["success", "command", "output"])

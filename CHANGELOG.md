@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v0.0.3a3
+
+- Add `cs3560_grading_lib.common.get_mtime_as_datetime`.
+- Add `cs3560_grading_lib.common.has_file_changed`.
+- (BREAKING CHANGE) Remove variable definition parsing of a Makefile.
+
 ## v0.0.3a2
 
 - Fix debug mode left on.
