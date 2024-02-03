@@ -1,18 +1,30 @@
 """
 Makefile related routines.
+
+The parser is high-level by design since
+the homework requirement do not need the full
+Makefile to be parsed. So far we only need
+the target names of a rule. If this parser is
+too much to mataintain we can offload checking-
+if-a-target-exist to GNU Make itself as well.
 """
 
 from __future__ import annotations
+
+import re
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Optional
-import re
 
+from .common import CommandResult, is_debug_mode, run_executable
 
-from .common import run_executable, CommandResult, is_debug_mode
+RULE_PATTERN = re.compile(
+    r"(?P<targets>[\w\.\-%$()\ +]+):(?!=|:=|::=)(?P<prereqs>[\w\.\-%$()\ +]*)"
+)
 
-VAR_DEF_PATTERN = re.compile(r"(?P<name>[\w\.-]+)\s*:*=\s*(?P<value>.*)")
-# This pattern will fail if it is checked before the VAR_DEF_PATTERN. e.g. := :::=
-RULE_PATTERN = re.compile(r"(?P<name>[\w\.\-%$()\ +]+):(?P<prereq>[\w\.\-%$()\ +]*)")
+# FIXME: This need to take directives into account e.g. override, undefine, etc.
+# Thus, parsing variable definition is dropped in v0.0.4
+VAR_DEF_PATTERN = re.compile(r"(?P<name>[\w\.-]+)\s*(:*|\?|!|\+)?=\s*(?P<value>.*)")
 
 
 def run_targets(targets: list[str], cwd: Optional[str | Path] = None) -> CommandResult:
@@ -70,11 +82,9 @@ class Makefile:
     def __init__(
         self,
         path: Path | str,
-        variable_definitions: list[VariableDefinition],
         rules: list[Rule],
     ):
         self.path = path
-        self.variable_definitions = variable_definitions
         self.rules = rules
 
     @classmethod
@@ -87,7 +97,6 @@ class Makefile:
     def from_text(cls, text: str):
         DEBUG: bool = is_debug_mode()
 
-        var_defs: list[VariableDefinition] = []
         rules: list[Rule] = []
 
         lines = [l.replace("\r", "") for l in text.split("\n")]
@@ -100,24 +109,13 @@ class Makefile:
 
             if len(line.strip()) != 0:
                 if line[0] == "#":
+                    if DEBUG:
+                        print("  line is a comment")
                     continue
-                if (res := re.match(VAR_DEF_PATTERN, line)) is not None:
-                    if DEBUG:
-                        print("line is a variable definition")
+                if (res := re.match(RULE_PATTERN, line)) is not None:
+                    target_token = res.group("targets")
+                    prereq_token = res.group("prereqs")
 
-                    name = res.group("name")
-                    value = res.group("value")
-
-                    var_defs.append(
-                        VariableDefinition(name=name.strip(), value=value.strip())
-                    )
-                elif line[0] != "\t" and ":" in line:
-                    if DEBUG:
-                        print("line is the begining of a rule")
-                    if current_rule is not None:
-                        rules.append(current_rule)
-
-                    target_token, prerequisite_token = line.split(":")
                     if " " in target_token:
                         targets = target_token.split(" ")
                     else:
@@ -125,24 +123,32 @@ class Makefile:
 
                     prereqs = [
                         t.strip()
-                        for t in prerequisite_token.split(" ")
+                        for t in prereq_token.split(" ")
                         if len(t.strip()) != 0
                     ]
                     current_rule = Rule(
                         targets=targets, prerequisites=prereqs, recipe=list()
                     )
+                elif current_rule is not None:
+                    # Everything else will be marked as part of the rule
+                    # if we are in one.
+                    if DEBUG:
+                        print("  line is part of the rule")
+
+                    current_rule.recipe.append(line)
                 else:
                     if DEBUG:
-                        print("line is part of the recipe")
-                    current_rule.recipe.append(line[1:])
+                        print("  no current rule, ignore this line")
+                    pass
             else:
                 if current_rule is not None:
+                    # Closing the rule when an empty line is found.
                     rules.append(current_rule)
                     current_rule = None
 
         if current_rule is not None:
             rules.append(current_rule)
-        return cls("memory://Makefile", var_defs, rules)
+        return cls("memory://Makefile", rules)
 
     def get_rule(self, targets: str | list[str]) -> Optional[Rule]:
         for rule in self.rules:
