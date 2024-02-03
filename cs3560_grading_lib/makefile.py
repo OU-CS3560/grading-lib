@@ -85,7 +85,7 @@ class Makefile:
 
     @classmethod
     def from_text(cls, text: str):
-        DEBUG: bool = True  # is_debug_mode()
+        DEBUG: bool = is_debug_mode()
 
         var_defs: list[VariableDefinition] = []
         rules: list[Rule] = []

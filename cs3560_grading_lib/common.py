@@ -2,9 +2,9 @@ import os
 import subprocess
 import time
 import unittest
-from pathlib import Path
 from collections import namedtuple
-from typing import Optional, Tuple, NamedTuple
+from pathlib import Path
+from typing import NamedTuple, Optional, Tuple
 
 COMMAND_FAILED_TEXT_TEMPLATE = "An error occurred while trying to run a command '{command}'. The command's output is\n\n{output}"
 FILE_NOT_EXIST_TEXT_TEMPLATE = "File '{path}' does not exist"
@@ -24,13 +24,14 @@ def is_debug_mode(
 
 def get_seed_from_env(variable_name: str = "SEED") -> int:
     raw_val = os.environ.get(variable_name, None)
-    seed_val = int(time.time())
+    # The test case is done too quickly to use second.
+    seed_val = int(time.time() * 1000.0)
 
     if raw_val is not None:
         try:
             seed_val = int(raw_val)
         except:
-            seed_val = int(time.time())
+            pass
 
     return seed_val
 
