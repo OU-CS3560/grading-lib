@@ -22,7 +22,7 @@ python -m pip install -e ".[dev]"
 
 ## Testing
 
-To run the test cases,
+Please make sure that the package is installed with `.[dev]`, then run
 
 ```console
 $ pytest

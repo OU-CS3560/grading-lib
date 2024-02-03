@@ -7,7 +7,7 @@ license = { file = "LICENSE" }
 dependencies = ['importlib-metadata; python_version>="3.12"']
 
 [project.optional-dependencies]
-dev = ["pytest"]
+dev = ["pytest", "pytest-cov"]
 
 [project.urls]
 Homepage = "https://github.com/OU-CS3560/cs3560-grading-lib"
