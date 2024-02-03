@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## v0.0.3a2
+
+- Fix debug mode left on.
+- Fix test case using the same seed.
 
 ## v0.0.3a1
 
