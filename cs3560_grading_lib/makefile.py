@@ -1,10 +1,18 @@
 """
 Makefile related routines.
 """
-from pathlib import Path
-from typing import Optional, Tuple
 
-from .common import run_executable, CommandResult
+from __future__ import annotations
+from pathlib import Path
+from typing import Optional
+import re
+
+
+from .common import run_executable, CommandResult, is_debug_mode
+
+VAR_DEF_PATTERN = re.compile(r"(?P<name>[\w\.-]+)\s*:*=\s*(?P<value>.*)")
+# This pattern will fail if it is checked before the VAR_DEF_PATTERN. e.g. := :::=
+RULE_PATTERN = re.compile(r"(?P<name>[\w\.\-%$()\ +]+):(?P<prereq>[\w\.\-%$()\ +]*)")
 
 
 def run_targets(targets: list[str], cwd: Optional[str | Path] = None) -> CommandResult:
@@ -50,6 +58,15 @@ class VariableDefinition:
 
 
 class Makefile:
+    """
+    A high-level representation of a Makefile.
+
+    Alternative includes a tree-sitter's one (https://github.com/alemuller/tree-sitter-make)
+    via its python binding at https://github.com/tree-sitter/py-tree-sitter.
+
+    A Python one https://github.com/linuxlizard/pymake.
+    """
+
     def __init__(
         self,
         path: Path | str,
@@ -61,66 +78,71 @@ class Makefile:
         self.rules = rules
 
     @classmethod
-    def from_path(cls, path: Path | str):
+    def from_path(cls, path: Path | str) -> Makefile:
         with open(path, "r") as f:
-            var_defs: list[VariableDefinition] = []
-            rules: list[Rule] = []
+            content = f.read()
+            return cls.from_text(content)
 
-            lines = f.readlines()
-            current_rule: Optional[Rule] = None
-            for line in lines:
-                line = line.strip()
+    @classmethod
+    def from_text(cls, text: str):
+        DEBUG: bool = True  # is_debug_mode()
 
-                if DEBUG:
-                    print(f"parsing '{line}'")
+        var_defs: list[VariableDefinition] = []
+        rules: list[Rule] = []
 
-                if len(line) != 0:
-                    if line[0] == "#":
-                        continue
+        lines = [l.replace("\r", "") for l in text.split("\n")]
+        current_rule: Optional[Rule] = None
+        for line in lines:
+            line = line.strip()
 
-                    if line[0] != "\t" and ":" in line:
-                        if DEBUG:
-                            print("line is the begining of a rule")
-                        if current_rule is not None:
-                            rules.append(current_rule)
+            if DEBUG:
+                print(f"parsing '{line}'")
 
-                        target_token, prerequisite_token = line.split(":")
-                        if " " in target_token:
-                            targets = target_token.split(" ")
-                        else:
-                            targets = target_token
+            if len(line.strip()) != 0:
+                if line[0] == "#":
+                    continue
+                if (res := re.match(VAR_DEF_PATTERN, line)) is not None:
+                    if DEBUG:
+                        print("line is a variable definition")
 
-                        prereqs = [
-                            t.strip()
-                            for t in prerequisite_token.split(" ")
-                            if len(t.strip()) != 0
-                        ]
-                        current_rule = Rule(
-                            targets=targets, prerequisites=prereqs, recipe=list()
-                        )
-                    elif line[0] != "\t" and "=" in line:
-                        if DEBUG:
-                            print("line is a variable definition")
-                        # Only act on the first '='.
-                        equal_pos = line.find("=")
-                        name = line[:equal_pos]
-                        value = line[equal_pos + 1 :]
+                    name = res.group("name")
+                    value = res.group("value")
 
-                        var_defs.append(
-                            VariableDefinition(name=name.strip(), value=value.strip())
-                        )
-                    else:
-                        if DEBUG:
-                            print("line is part of the recipe")
-                        current_rule.recipe.append(line[1:])
-                else:
+                    var_defs.append(
+                        VariableDefinition(name=name.strip(), value=value.strip())
+                    )
+                elif line[0] != "\t" and ":" in line:
+                    if DEBUG:
+                        print("line is the begining of a rule")
                     if current_rule is not None:
                         rules.append(current_rule)
-                        current_rule = None
 
-            if current_rule is not None:
-                rules.append(current_rule)
-            return cls(path, var_defs, rules)
+                    target_token, prerequisite_token = line.split(":")
+                    if " " in target_token:
+                        targets = target_token.split(" ")
+                    else:
+                        targets = target_token
+
+                    prereqs = [
+                        t.strip()
+                        for t in prerequisite_token.split(" ")
+                        if len(t.strip()) != 0
+                    ]
+                    current_rule = Rule(
+                        targets=targets, prerequisites=prereqs, recipe=list()
+                    )
+                else:
+                    if DEBUG:
+                        print("line is part of the recipe")
+                    current_rule.recipe.append(line[1:])
+            else:
+                if current_rule is not None:
+                    rules.append(current_rule)
+                    current_rule = None
+
+        if current_rule is not None:
+            rules.append(current_rule)
+        return cls("memory://Makefile", var_defs, rules)
 
     def get_rule(self, targets: str | list[str]) -> Optional[Rule]:
         for rule in self.rules:
