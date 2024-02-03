@@ -20,19 +20,11 @@ def main(args):
         print(f"[error]: target directory '{str(target_dir)}' does not exist")
         sys.exit(1)
 
-    github_dir = args.github_dir
-    if isinstance(github_dir, str):
-        github_dir = Path(github_dir)
+    out_dir = args.out_dir
+    if isinstance(out_dir, str):
+        out_dir = Path(out_dir)
 
-    if github_dir.name != ".github":
-        print(
-            f"[error]: --github-dir must be named '.github', but got '{github_dir.name}'"
-        )
-        sys.exit(1)
-
-    if not github_dir.exists():
-        print(f"[error]: directory '{str(github_dir)}' does not exist")
-        sys.exit(1)
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     tests = []
     for problem_file_path in target_dir.glob("*/problem.toml"):
@@ -51,10 +43,7 @@ def main(args):
 
                 tests.append(test)
 
-    classroom_dir = github_dir / "classroom"
-    classroom_dir.mkdir(exist_ok=True)
-
-    autograding_filepath = classroom_dir / "autograding.json"
+    autograding_filepath = out_dir / "autograding.json"
     with open(autograding_filepath, "w") as out_file:
         json.dump({"tests": tests}, out_file, indent=2)
 
@@ -64,6 +53,6 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("dir", nargs="?", default=os.getcwd())
-    parser.add_argument("--github-dir", action="store", default=Path(".") / ".github")
+    parser.add_argument("--out-dir", action="store", default=Path(".") / ".github" / "classroom")
     args = parser.parse_args()
     main(args)
