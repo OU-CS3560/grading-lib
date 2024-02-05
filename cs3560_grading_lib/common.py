@@ -117,3 +117,18 @@ class BaseTestCase(unittest.TestCase):
         if not result.success:
             msg = msg_template.format(command=result.command, output=result.output)
             raise self.failureException(msg)
+
+
+class GeneratorBase:
+    """
+    A generator that will be run during the generation.yml workflow.
+
+    It may be called by the grading script to prepare a clean
+    copy of the content generated during the generation phase.
+    """
+
+    def generate(self, path: Path | str) -> None:
+        raise NotImplementedError()
+
+    def run(self, path: Path | str) -> None:
+        return self.generate(path)
