@@ -5,7 +5,7 @@ import time
 import unittest
 from collections import namedtuple
 from pathlib import Path
-from typing import NamedTuple, Optional, Tuple
+from typing import Optional
 
 COMMAND_FAILED_TEXT_TEMPLATE = "An error occurred while trying to run a command '{command}'. The command's output is\n\n{output}"
 FILE_NOT_EXIST_TEXT_TEMPLATE = "File '{path}' does not exist"

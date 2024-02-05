@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## v0.0.3a4
+
+- Add `cs3560_grading_lib.makefile.MakefileBaseTestCase`.
+
 ## v0.0.3a3
 
 - Add `cs3560_grading_lib.common.get_mtime_as_datetime`.
@@ -20,8 +24,6 @@
 - Allow target dir for `cs3560_grading_lib.tools.collect_autograding_tests` to be non-existence.
 
 ## v0.0.2
-
-
 
 ## v0.0.1
 

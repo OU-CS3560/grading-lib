@@ -12,18 +12,17 @@ if-a-target-exist to GNU Make itself as well.
 from __future__ import annotations
 
 import re
-from collections.abc import Mapping
 from pathlib import Path
 from typing import Optional
 
-from .common import CommandResult, is_debug_mode, run_executable
+from .common import BaseTestCase, CommandResult, is_debug_mode, run_executable
 
 RULE_PATTERN = re.compile(
     r"(?P<targets>[\w\.\-%$()\ +]+):(?!=|:=|::=)(?P<prereqs>[\w\.\-%$()\ +]*)"
 )
 
 # FIXME: This need to take directives into account e.g. override, undefine, etc.
-# Thus, parsing variable definition is dropped in v0.0.4
+# Thus, parsing variable definition is dropped in v0.0.3
 VAR_DEF_PATTERN = re.compile(r"(?P<name>[\w\.-]+)\s*(:*|\?|!|\+)?=\s*(?P<value>.*)")
 
 
@@ -160,3 +159,45 @@ class Makefile:
     def has_rule(self, targets: str | list[str]) -> bool:
         rule = self.get_rule(targets)
         return rule is not None
+
+
+class MakefileBaseTestCase(BaseTestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        if not hasattr(cls, "makefile_name"):
+            raise AttributeError("'makefile_name' is required")
+
+        if isinstance(cls.makefile_name, str):
+            cls.makefile_name = Path(cls.makefile_name)
+
+        if not cls.makefile_name.exists():
+            assert False, f"Expect a file '{cls.makefile_name}', but it does not exist."
+
+        cls.makefile = Makefile.from_path(cls.makefile_name)
+
+    def assertHasRuleForTarget(
+        self,
+        target_name: str,
+        msg_template: str = "Rule for a target '{target_name}' does not exist. Its behavior cannot be verified.",
+    ):
+        """
+        The Makefile must have target `target_name`.
+        """
+        if not self.makefile.has_rule(target_name):
+            msg = msg_template.format(target_name=target_name)
+            raise self.failureException(msg)
+
+    def assertRuleRecipeIsEmpty(
+        self,
+        target_name: str,
+        msg_template: str = "Recipe of the rule for a target '{target_name}' is not empty.",
+    ):
+        rule = self.makefile.get_rule(target_name)
+        if rule is None:
+            msg = "Rule for a target '{target_name}' does not exist. Its behavior cannot be verified.".format(
+                target_name=target_name
+            )
+            raise self.failureException(msg)
+        if not rule.is_empty():
+            msg = msg_template.format(target_name=target_name)
+            raise self.failureException(msg)
