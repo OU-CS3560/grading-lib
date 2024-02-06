@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fix `run_executable` not capture stdout with pipe.
+
 ## v0.0.3
 
 - Add `cs3560_grading_lib.common.populate_folder_with_filenames`.
