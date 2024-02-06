@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## v0.0.3
+
+- Add `cs3560_grading_lib.common.populate_folder_with_filenames`.
+- Include all changes from `v0.0.3a1` to `v0.0.3a4`.
+
 ## v0.0.3a4
 
 - Add `cs3560_grading_lib.makefile.MakefileBaseTestCase`.

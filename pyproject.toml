@@ -4,7 +4,7 @@ requires-python = ">=3.12"
 description = "A common library for the grading scripts."
 readme = "README.md"
 license = { file = "LICENSE" }
-dependencies = ['importlib-metadata; python_version>="3.12"']
+dependencies = ["GitPython", 'importlib-metadata; python_version>="3.12"']
 dynamic = ["version"]
 
 [project.optional-dependencies]

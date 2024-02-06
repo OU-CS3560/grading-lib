@@ -1,4 +1,4 @@
-__version__ = "0.0.3a4"
+__version__ = "0.0.3"
 __all__ = [
     "COMMAND_FAILED_TEXT_TEMPLATE",
     "BaseTestCase",

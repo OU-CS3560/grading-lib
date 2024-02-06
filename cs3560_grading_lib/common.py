@@ -1,5 +1,6 @@
 import datetime
 import os
+import random
 import subprocess
 import time
 import unittest
@@ -9,6 +10,9 @@ from typing import Optional
 
 COMMAND_FAILED_TEXT_TEMPLATE = "An error occurred while trying to run a command '{command}'. The command's output is\n\n{output}"
 FILE_NOT_EXIST_TEXT_TEMPLATE = "File '{path}' does not exist"
+DEFAULT_FILENAME_POOL = ["main.cpp", "file.txt"]
+FILE_SUFFIX_POOL = [".cpp", ".txt", ".md", ".zip", ".py", ".toml", ".yml", ".yaml"]
+NAME_POOL = ["herta", "cat", "dog", "dolphin", "falcon", "dandilion", "fox", "jett"]
 
 
 def is_debug_mode(
@@ -47,6 +51,19 @@ def get_mtime_as_datetime(path: Path | str) -> datetime.datetime:
 def has_file_changed(last_known_mtime: datetime.datetime, path: Path | str) -> bool:
     new_mtime = get_mtime_as_datetime(path)
     return new_mtime > last_known_mtime
+
+
+def populate_folder_with_filenames(path: Path | str, filnames: list[str]):
+    if isinstance(path, str):
+        path = Path(path)
+    if not path.exists():
+        raise ValueError("'path' does not exist")
+    if not path.is_dir():
+        raise ValueError("'path' is not a directory")
+
+    for name in filnames:
+        with open(path / name, "w") as f:
+            f.write("")
 
 
 CommandResult = namedtuple("CommandResult", ["success", "command", "output"])
