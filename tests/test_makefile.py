@@ -40,6 +40,18 @@ Date:
 
 
 @pytest.fixture
+def makefile_3():
+    """Continuous Makefile."""
+    return """
+a: e f
+b: g
+c: h
+	@echo hi
+d: i j
+"""
+
+
+@pytest.fixture
 def makefile_var_defs():
     """
     Various variable definitions.
@@ -81,6 +93,20 @@ def test_makefile_from_text_2(makefile_2):
 
     assert mk.rules[0].is_empty()
     assert not mk.rules[1].is_empty()
+
+
+def test_makefile_from_text_3(makefile_3):
+    try:
+        mk = Makefile.from_text(makefile_3)
+    except Exception:
+        assert False, "Exception raises while parsing a makefile."
+
+    assert mk.has_rule("a")
+    assert mk.has_rule("b")
+    assert mk.has_rule("c")
+    assert mk.has_rule("d")
+
+    assert not mk.get_rule("c").is_empty()
 
 
 def test_makefile_var_defs_parsing(makefile_var_defs):

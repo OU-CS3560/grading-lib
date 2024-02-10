@@ -25,3 +25,8 @@ version = { attr = "cs3560_grading_lib.__version__" }
 
 [tool.isort]
 profile = "black"
+
+[tool.pytest.ini_options]
+markers = [
+    "interest: marks tests as interested (deselect with '-m \"not interest\"')",
+]

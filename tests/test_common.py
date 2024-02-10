@@ -12,16 +12,16 @@ from cs3560_grading_lib.common import get_mtime_as_datetime, has_file_changed
 def test_is_debug_mode():
     vals_for_true = ["1", "True", "T", "On", "ON", "t", "true"]
     for val in vals_for_true:
-        os.environ["DEBUG"] = val
-        assert is_debug_mode()
+        os.environ["test_DEBUG"] = val
+        assert is_debug_mode("test_DEBUG")
 
     vals_for_false = ["", None, "False", "false", "lorem", "0"]
     for val in vals_for_false:
         if val is None:
-            del os.environ["DEBUG"]
+            del os.environ["test_DEBUG"]
         else:
-            os.environ["DEBUG"] = val
-        assert is_debug_mode() is False
+            os.environ["test_DEBUG"] = val
+        assert is_debug_mode("test_DEBUG") is False
 
 
 @pytest.fixture

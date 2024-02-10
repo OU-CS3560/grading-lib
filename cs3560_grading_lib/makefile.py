@@ -112,6 +112,11 @@ class Makefile:
                         print("  line is a comment")
                     continue
                 if (res := re.match(RULE_PATTERN, line)) is not None:
+                    if current_rule is not None:
+                        # conclude the current rule, if there is any.
+                        rules.append(current_rule)
+                        current_rule = None
+
                     target_token = res.group("targets")
                     prereq_token = res.group("prereqs")
 
