@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## v0.0.4
+
 - Fix parsing problem with Makefile where there is no empty line
   between the rules.
 
