@@ -82,7 +82,7 @@ def run_executable(args, cwd: Optional[str | Path] = None) -> CommandResult:
     """
     try:
         make_cmd_output = subprocess.check_output(
-            args, stdout=subprocess.STDOUT, stderr=subprocess.STDOUT, cwd=cwd
+            args, stderr=subprocess.STDOUT, cwd=cwd
         )
         return CommandResult(True, " ".join(args), make_cmd_output.decode())
     except subprocess.CalledProcessError as e:

@@ -2,7 +2,6 @@
 
 ## Unreleased
 
-- Fix `run_executable` not capture stdout with pipe.
 - Fix parsing problem with Makefile where there is no empty line
   between the rules.
 
