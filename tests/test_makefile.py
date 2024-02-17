@@ -102,11 +102,17 @@ def test_makefile_from_text_3(makefile_3):
         assert False, "Exception raises while parsing a makefile."
 
     assert mk.has_rule("a")
-    assert mk.has_rule("b")
-    assert mk.has_rule("c")
-    assert mk.has_rule("d")
+    assert mk.get_rule("a").prerequisites == ["e", "f"]
 
+    assert mk.has_rule("b")
+    assert mk.get_rule("b").prerequisites == ["g"]
+
+    assert mk.has_rule("c")
+    assert mk.get_rule("c").prerequisites == ["h"]
     assert not mk.get_rule("c").is_empty()
+
+    assert mk.has_rule("d")
+    assert mk.get_rule("d").prerequisites == ["i", "j"]
 
 
 def test_makefile_var_defs_parsing(makefile_var_defs):
