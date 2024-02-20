@@ -26,10 +26,10 @@ def test_is_debug_mode():
 
 @pytest.fixture
 def a_temp_file():
-    f = tempfile.NamedTemporaryFile(delete_on_close=False)
-    f.close()
+    f = tempfile.NamedTemporaryFile()
+    f.seek(0)
     yield f
-    f._closer.cleanup()
+    f.close()
 
 
 def test_has_file_changed(a_temp_file):

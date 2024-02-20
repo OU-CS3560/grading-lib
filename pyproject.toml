@@ -1,10 +1,10 @@
 [project]
 name = "cs3560-grading-lib"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 description = "A common library for the grading scripts."
 readme = "README.md"
 license = { file = "LICENSE" }
-dependencies = ["GitPython", 'importlib-metadata; python_version>="3.12"']
+dependencies = ["GitPython", 'importlib-metadata; python_version>="3.10"']
 dynamic = ["version"]
 
 [project.optional-dependencies]

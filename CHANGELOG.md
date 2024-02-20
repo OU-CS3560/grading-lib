@@ -1,7 +1,9 @@
 # Changelog
 
-## Unreleased
+## Unreleased / Changes on the main branch
 
+- Remove the requirement for Python 3.12. Change `datetime.UTC` to `datetime.timezone.utc` (requires Python >= 3.11).
+  Avoid using `delete_on_close` parameter of `tempfile.NamedTemporaryFile` (requires Python >= 3.12).
 
 ## v0.0.4
 

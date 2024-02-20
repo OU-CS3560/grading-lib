@@ -46,7 +46,7 @@ def get_mtime_as_datetime(path: Path | str) -> datetime.datetime:
     if isinstance(path, str):
         path = Path(path)
 
-    return datetime.datetime.fromtimestamp(path.stat().st_mtime, tz=datetime.UTC)
+    return datetime.datetime.fromtimestamp(path.stat().st_mtime, tz=datetime.timezone.utc)
 
 
 def has_file_changed(last_known_mtime: datetime.datetime, path: Path | str) -> bool:
