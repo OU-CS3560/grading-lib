@@ -9,6 +9,7 @@ dynamic = ["version"]
 
 [project.optional-dependencies]
 dev = ["pytest", "pytest-cov"]
+doc = ["sphinx", "myst-parser", "sphinx-book-theme", "sphinx-autodoc2"]
 
 [project.urls]
 Homepage = "https://github.com/OU-CS3560/cs3560-grading-lib"
