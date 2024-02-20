@@ -17,3 +17,22 @@ if __name__ == "__main__":
     runner = unittest.TextTestRunner(resultclass=MinimalistTestResult)
     unittest.main(testRunner=runner)    
 ```
+
+## Build System Problems
+
+The grading lib offers powerful utilities for authoring a grading script
+for a build system related problem. Here are some notable example of such
+utilities.
+
+- {py:obj}`cs3560_grading_lib.makefile.run_targets` that runs a target (or targets)
+  in a `Makefile` and return the {py:obj}`cs3560_grading_lib.common.CommandResult`.
+- A class {py:obj}`cs3560_grading_lib.makefile.Makefile` that offer high-level parsing
+  for a `Makefile`.
+
+## Git Problems
+
+Similarly, grading lib has these utilies that will help you write 
+a problem for Git.
+
+## Tools
+
