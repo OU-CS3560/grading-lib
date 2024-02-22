@@ -22,28 +22,6 @@
 			"extensions": [
 			  "ms-python.isort", "ms-python.black-formatter"
 			]
-		},
-		"codespaces": {
-			"repositories": {
-				"OU-CS3560/grading-lib": {
-					"permissions": {"contents": "write", "pull_requests": "write"}
-				},
-				"OU-CS3560/hw-problem-catalog": {
-					"permissions": {"contents": "write", "pull_requests": "write"}
-				},
-				"OU-CS3560/hw-make-template": {
-					"permissions": {"contents": "write", "pull_requests": "write"}
-				},
-				"OU-CS3560/hw-git1-template": {
-					"permissions": {"contents": "write", "pull_requests": "write"}
-				},
-				"OU-CS3560/hw-shell-template": {
-					"permissions": {"contents": "write", "pull_requests": "write"}
-				},
-				"OU-CS3560/quiz-make-ide-template": {
-					"permissions": {"contents": "write", "pull_requests": "write"}
-				}
-			}
 		}
 	}
 
