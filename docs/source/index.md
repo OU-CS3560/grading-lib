@@ -8,6 +8,11 @@
 python -m pip install cs3560-grading-lib
 ```
 
+## Features
+
+- Base class for a test case.
+- Utilities functions to grade make related problems.
+
 
 ```{toctree}
 :hidden:

@@ -20,7 +20,7 @@ templates_path = ["_templates"]
 exclude_patterns = []
 
 autodoc2_packages = [
-    "../../cs3560_grading_lib",
+    "../../grading_lib",
 ]
 
 

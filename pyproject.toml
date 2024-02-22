@@ -21,8 +21,11 @@ Changelog = "https://github.com/OU-CS3560/cs3560-grading-lib/blob/main/CHANGELOG
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools]
+packages = ["grading_lib", "grading_lib.tools"]
+
 [tool.setuptools.dynamic]
-version = { attr = "cs3560_grading_lib.__version__" }
+version = { attr = "grading_lib.__version__" }
 
 [tool.isort]
 profile = "black"
