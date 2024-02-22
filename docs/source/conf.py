@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "CS3560 - Grading Library"
+project = "CS3560's Grading Library"
 copyright = "2024, Krerkkiat Chusap"
 author = "Krerkkiat Chusap"
 release = "0.1.0"
