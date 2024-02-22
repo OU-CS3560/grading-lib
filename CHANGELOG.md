@@ -7,6 +7,7 @@
 - Remove the requirement for Python 3.12. Change `datetime.UTC` to `datetime.timezone.utc` (requires Python >= 3.11).
   Avoid using `delete_on_close` parameter of `tempfile.NamedTemporaryFile` (requires Python >= 3.12).
 - Rename package from `cs356_grading_lib` to `grading_lib`.
+- Switch to a centralized version number scheme.
 
 ## v0.0.4
 

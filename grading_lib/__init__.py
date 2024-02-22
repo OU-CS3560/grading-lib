@@ -1,4 +1,9 @@
-__version__ = "0.1.0a1"
+import os
+
+with open(os.path.join(__file__, "VERSION")) as version_file:
+    version = version_file.read().strip()
+
+__version__ = version
 __all__ = [
     "COMMAND_FAILED_TEXT_TEMPLATE",
     "BaseTestCase",

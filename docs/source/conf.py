@@ -5,11 +5,15 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+import os
+
+with open(os.path.join(__file__, "VERSION")) as version_file:
+    version = version_file.read().strip()
 
 project = "CS3560's Grading Library"
 copyright = "2024, Krerkkiat Chusap"
 author = "Krerkkiat Chusap"
-release = "0.1.0"
+release = version
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
