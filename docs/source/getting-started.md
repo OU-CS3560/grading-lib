@@ -7,7 +7,7 @@ you can create a simple grading script by
 # file: scripts/grade.py
 import unittest
 
-from cs3560_grading_lib.common import BaseTestCase, MinimalistTestResult
+from grading_lib.common import BaseTestCase, MinimalistTestResult
 
 class TestExampleProblem:
     def test_example_problem(self):
@@ -24,9 +24,9 @@ The grading lib offers powerful utilities for authoring a grading script
 for a build system related problem. Here are some notable example of such
 utilities.
 
-- {py:obj}`cs3560_grading_lib.makefile.run_targets` that runs a target (or targets)
-  in a `Makefile` and return the {py:obj}`cs3560_grading_lib.common.CommandResult`.
-- A class {py:obj}`cs3560_grading_lib.makefile.Makefile` that offer high-level parsing
+- {py:obj}`grading_lib.makefile.run_targets` that runs a target (or targets)
+  in a `Makefile` and return the {py:obj}`grading_lib.common.CommandResult`.
+- A class {py:obj}`grading_lib.makefile.Makefile` that offer high-level parsing
   for a `Makefile`.
 
 ## Git Problems

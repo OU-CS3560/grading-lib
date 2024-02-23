@@ -1,23 +1,21 @@
-# cs3560-grading-lib
+# cs3560's grading-lib
 
 A common library for the grading scripts.
 
 ## Install
 
 ```console
-$ python -m pip install cs3560-grading-lib
+python -m pip install cs3560-grading-lib
 ```
 
 ## Features
 
-Collecting the tests of problems into `.github/classroom/autograding.json`.
+- Base class for a test case.
+- Utilities functions to grade make related problems.
 
-```console
-python -m cs3560_grading_lib.tools.collect_autograding_tests
-```
+## Documentation
 
-The `cs3560_grading_lib.BaseTestCase` that provides `assertFileExists` and `assertCommandSuccessful`.
-The later takes the result from `cs3560_grading_lib.run_executable` or `cs3560_grading_lib.run_targets`.
+View [latest documentaion](https://grading-lib.readthedocs.io/en/latest/)
 
 ## Similar Projects / More Mature Projects
 

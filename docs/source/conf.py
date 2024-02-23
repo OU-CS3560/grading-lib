@@ -7,7 +7,8 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 import os
 
-with open(os.path.join(__file__, "VERSION")) as version_file:
+package_root_dir = os.path.join(os.path.dirname(__file__), "..", "..", "grading_lib")
+with open(os.path.join(package_root_dir, "VERSION")) as version_file:
     version = version_file.read().strip()
 
 project = "CS3560's Grading Library"

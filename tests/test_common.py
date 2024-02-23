@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from cs3560_grading_lib import is_debug_mode
-from cs3560_grading_lib.common import get_mtime_as_datetime, has_file_changed
+from grading_lib import is_debug_mode
+from grading_lib.common import get_mtime_as_datetime, has_file_changed
 
 
 def test_is_debug_mode():

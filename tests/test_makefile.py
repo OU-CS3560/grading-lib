@@ -1,6 +1,6 @@
 import pytest
 
-from cs3560_grading_lib.makefile import Makefile, VariableDefinition
+from grading_lib.makefile import Makefile, VariableDefinition
 
 
 @pytest.fixture
