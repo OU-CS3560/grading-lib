@@ -2,6 +2,8 @@
 
 ## Unreleased / Changes on the main branch
 
+## v0.1.0a2
+
 - Use `tomli` instead of the builtin `tomllib`.
 
 ## v0.1.0a1
