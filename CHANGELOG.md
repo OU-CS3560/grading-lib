@@ -2,6 +2,8 @@
 
 ## Unreleased / Changes on the main branch
 
+- Use `tomli` instead of the builtin `tomllib`.
+
 ## v0.1.0a1
 
 - Remove the requirement for Python 3.12. Change `datetime.UTC` to `datetime.timezone.utc` (requires Python >= 3.11).

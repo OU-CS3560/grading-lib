@@ -4,11 +4,13 @@ Collect the tests from the problems and write to .github/classroom/autograding.j
 Hopefully, this make the problem in the assignment modular enough
 that we can add or remove them as we please.
 """
+
 import json
 import os
 import sys
-import tomllib
 from pathlib import Path
+
+import tomli
 
 
 def main(args):
@@ -30,7 +32,7 @@ def main(args):
     for problem_file_path in target_dir.glob("*/problem.toml"):
         print(f"processing {problem_file_path}")
         with open(problem_file_path, "rb") as in_file:
-            data = tomllib.load(in_file)
+            data = tomli.load(in_file)
             problem_name = data["problem"]["name"]
             for key, data in data["problem"]["tests"].items():
                 # Modify the run command by preprend it with the
@@ -53,6 +55,8 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("dir", nargs="?", default=os.getcwd())
-    parser.add_argument("--out-dir", action="store", default=Path(".") / ".github" / "classroom")
+    parser.add_argument(
+        "--out-dir", action="store", default=Path(".") / ".github" / "classroom"
+    )
     args = parser.parse_args()
     main(args)
