@@ -2,6 +2,10 @@
 
 ## Unreleased / Changes on the main branch
 
+## v0.1.0
+
+See changelog from v0.1.0a1 to v0.1.0rc2.
+
 ## v0.1.0rc2
 
 - Fix `BaseTestCase.assertCommandOutputEqual` not checking if the outputs are equal.
