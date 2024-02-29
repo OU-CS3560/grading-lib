@@ -17,7 +17,7 @@ classifiers = [
     "Natural Language :: English",
     "Topic :: Education :: Testing",
 ]
-dependencies = ["tomli", "GitPython", 'importlib-metadata; python_version>="3.10"']
+dependencies = ["click", "tomli", "GitPython", 'importlib-metadata; python_version>="3.10"']
 
 [project.optional-dependencies]
 dev = ["pytest", "pytest-cov", "mypy"]
@@ -31,7 +31,7 @@ Issues = "https://github.com/OU-CS3560/cs3560-grading-lib/issues"
 Changelog = "https://github.com/OU-CS3560/cs3560-grading-lib/blob/main/CHANGELOG.md"
 
 [tool.setuptools]
-packages = ["grading_lib", "grading_lib.tools"]
+packages = ["grading_lib", "grading_lib.tools", "grading_lib.cli"]
 
 [tool.setuptools.dynamic]
 version = { file = "grading_lib/VERSION" }

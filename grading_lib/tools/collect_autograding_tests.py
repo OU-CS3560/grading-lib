@@ -8,12 +8,16 @@ that we can add or remove them as we please.
 import json
 import os
 import sys
+import warnings
 from pathlib import Path
 
 import tomli
 
 
 def main(args):
+    warnings.warn(
+        "This is depreated in the favor of cli module", DeprecationWarning, stacklevel=2
+    )
     target_dir = args.dir
     if isinstance(target_dir, str):
         target_dir = Path(target_dir)

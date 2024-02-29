@@ -5,6 +5,11 @@
 - Fix errors/warnings from mypy.
 - Add `py.typed` file.
 - Add `BaseTestCase.assertAllFilesExist`
+- Add `cli` module.
+- Add `dev mypy` CLI command.
+- Add `internal collect-autograding-tests` CLI command.
+- Add `summary` CLI command.
+- Deprecate `grading_lib.tools.collect_autograding_tests` module.
 
 ## v0.1.0a2
 
