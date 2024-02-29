@@ -34,5 +34,9 @@ utilities.
 Similarly, grading lib has these utilies that will help you write 
 a problem for Git.
 
-## Tools
+## Useful CLI Commands
 
+grading-lib provides command-line interface (CLI) with some useful commands.
+
+- A `summary` command that shows the number of problems, total points and points per problem.
+- A `dev mypy` command that runs Mypy aginst the grading scripts in the `scripts/` folder.

@@ -15,7 +15,7 @@ python -m pip install cs3560-grading-lib
 
 ## Documentation
 
-View [latest documentaion](https://grading-lib.readthedocs.io/en/latest/)
+View the [latest documentation](https://grading-lib.readthedocs.io/en/latest/)
 
 ## Similar Projects / More Mature Projects
 

@@ -2,6 +2,9 @@
 
 ## Unreleased / Changes on the main branch
 
+- Fix `internal collect-autograding-tests` command by allow
+  problem to have no test case.
+
 ## v0.1.0a3
 
 - Fix errors/warnings from mypy.
