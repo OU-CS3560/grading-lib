@@ -2,6 +2,8 @@
 
 ## Unreleased / Changes on the main branch
 
+## v0.1.0rc1
+
 - Add `BaseTestCase.with_temporary_dir`. A metaclass `BaseTestCaseMeta`
   is added to support it.
 - Add `BaseTestCase.assertCommandOutputEqual`.
