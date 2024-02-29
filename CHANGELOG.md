@@ -2,6 +2,8 @@
 
 ## Unreleased / Changes on the main branch
 
+## v0.1.0a3
+
 - Fix errors/warnings from mypy.
 - Add `py.typed` file.
 - Add `BaseTestCase.assertAllFilesExist`
