@@ -1,1 +1,3 @@
 include grading_lib/VERSION
+global-include *.pyi
+global-include *.typed

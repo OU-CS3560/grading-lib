@@ -2,6 +2,10 @@
 
 ## Unreleased / Changes on the main branch
 
+- Fix errors/warnings from mypy.
+- Add `py.typed` file.
+- Add `BaseTestCase.assertAllFilesExist`
+
 ## v0.1.0a2
 
 - Use `tomli` instead of the builtin `tomllib`.

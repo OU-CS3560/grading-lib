@@ -46,7 +46,9 @@ def get_mtime_as_datetime(path: Path | str) -> datetime.datetime:
     if isinstance(path, str):
         path = Path(path)
 
-    return datetime.datetime.fromtimestamp(path.stat().st_mtime, tz=datetime.timezone.utc)
+    return datetime.datetime.fromtimestamp(
+        path.stat().st_mtime, tz=datetime.timezone.utc
+    )
 
 
 def has_file_changed(last_known_mtime: datetime.datetime, path: Path | str) -> bool:
@@ -125,9 +127,27 @@ class BaseTestCase(unittest.TestCase):
     def assertFileExists(
         self, path: Path, msg_template: str = FILE_NOT_EXIST_TEXT_TEMPLATE
     ):
+        """Fail if file at path does not exist."""
         if not path.exists():
             msg = msg_template.format(path=str(path))
             raise self.failureException(msg)
+
+    def assertAllFilesExist(self, paths: list[Path], msg=None):
+        not_exist: list[Path] = []
+        for path in paths:
+            if not path.exists():
+                not_exist.append(path)
+
+        if len(not_exist) != 0:
+            if msg is None:
+                path_strs = [str(p) for p in paths]
+                not_exist_strs = [str(p) for p in not_exist]
+
+                if len(path_strs) == len(not_exist_strs):
+                    msg = f"""Expect to see all of these files: {path_strs}.\n\nHowever, none of them can be found."""
+                else:
+                    msg = f"""Expect to see all of these files: {path_strs}.\n\nHowever, these files cannot be found: {not_exist_strs}"""
+            raise self.failureException(msg.format(paths=paths, not_exist=not_exist))
 
     def assertCommandSuccessful(
         self, result: CommandResult, msg_template: str = COMMAND_FAILED_TEXT_TEMPLATE

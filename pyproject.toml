@@ -20,7 +20,7 @@ classifiers = [
 dependencies = ["tomli", "GitPython", 'importlib-metadata; python_version>="3.10"']
 
 [project.optional-dependencies]
-dev = ["pytest", "pytest-cov"]
+dev = ["pytest", "pytest-cov", "mypy"]
 doc = ["sphinx", "myst-parser", "sphinx-book-theme", "sphinx-autodoc2"]
 
 [project.urls]

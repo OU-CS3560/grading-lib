@@ -22,7 +22,7 @@ release = version
 extensions = ["myst_parser", "autodoc2"]
 
 templates_path = ["_templates"]
-exclude_patterns = []
+exclude_patterns: list[str] = []
 
 autodoc2_packages = [
     "../../grading_lib",

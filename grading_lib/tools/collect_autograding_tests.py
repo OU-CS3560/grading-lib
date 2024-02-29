@@ -51,6 +51,8 @@ def main(args):
 
 
 if __name__ == "__main__":
+    # Using argparse, so we have one less dependency.
+    # Eventually, click may be used.
     import argparse
 
     parser = argparse.ArgumentParser()
