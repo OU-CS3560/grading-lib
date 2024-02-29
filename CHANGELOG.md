@@ -2,6 +2,13 @@
 
 ## Unreleased / Changes on the main branch
 
+- Add `BaseTestCase.with_temporary_dir`. A metaclass `BaseTestCaseMeta`
+  is added to support it.
+- Add `BaseTestCase.assertCommandOutputEqual`.
+- BREAKING CHANGE: `run_targets` now take Makefile's name. The default name is `answer.mk`
+- BREAKING CHANGE: Rename `MakefileBaseTestCase.makefie_name` to `MakefileBaseTestCase.makefile_path`.
+- Add `MakefileBaseTestCase.copy_makefile`.
+
 ## v0.1.0a4
 
 - Fix `internal collect-autograding-tests` command by allow

@@ -2,6 +2,7 @@ import datetime
 import os
 import random
 import subprocess
+import tempfile
 import time
 import unittest
 from collections import namedtuple
@@ -119,42 +120,97 @@ class MinimalistTestResult(unittest.TextTestResult):
             self.stream.flush()
 
 
-class BaseTestCase(unittest.TestCase):
+class BaseTestCaseMeta(type):
+    def __new__(cls, name: str, bases, attrs: dict):
+        if "with_temporary_dir" not in attrs:
+            attrs["with_temporary_dir"] = False
+
+        o = super().__new__(cls, name, bases, attrs)
+        return o
+
+
+class BaseTestCase(unittest.TestCase, metaclass=BaseTestCaseMeta):
+    """
+    A base class for test case.
+
+    :cvar with_temporary_dir: When `True`, create a temporary directory for each test.
+    """
+
+    with_temporary_dir: bool  # Added by metaclass.
+
     def setUp(self):
         self.is_debug_mode = is_debug_mode()
         self.seed = get_seed_from_env()
 
+        self.temporary_dir = None
+        if self.with_temporary_dir:
+            self.temporary_dir = tempfile.TemporaryDirectory(dir=Path("."))
+            self.temporary_dir_path = Path(self.temporary_dir.name)
+
+    def tearDown(self) -> None:
+        if not self.is_debug_mode and self.with_temporary_dir:
+            self.temporary_dir.cleanup()
+
     def assertFileExists(
         self, path: Path, msg_template: str = FILE_NOT_EXIST_TEXT_TEMPLATE
-    ):
-        """Fail if file at path does not exist."""
+    ) -> None:
+        """Pass if the file at `path` exist."""
         if not path.exists():
             msg = msg_template.format(path=str(path))
             raise self.failureException(msg)
 
-    def assertAllFilesExist(self, paths: list[Path], msg=None):
+    def assertAllFilesExist(self, paths: list[Path], msg=None) -> None:
+        """Pass if all the listed files exist."""
         not_exist: list[Path] = []
         for path in paths:
             if not path.exists():
                 not_exist.append(path)
 
-        if len(not_exist) != 0:
-            if msg is None:
-                path_strs = [str(p) for p in paths]
-                not_exist_strs = [str(p) for p in not_exist]
+            if not path.is_file():
+                raise self.failureException(
+                    f"Expect a file, but '{str(path)}' is not a file."
+                )
 
+        if len(not_exist) != 0:
+            path_strs = [str(p) for p in paths]
+            not_exist_strs = [str(p) for p in not_exist]
+            if msg is None:
                 if len(path_strs) == len(not_exist_strs):
-                    msg = f"""Expect to see all of these files: {path_strs}.\n\nHowever, none of them can be found."""
+                    msg = """Expect to see all of these files: {paths}.\n\nHowever, none of them can be found."""
                 else:
-                    msg = f"""Expect to see all of these files: {path_strs}.\n\nHowever, these files cannot be found: {not_exist_strs}"""
-            raise self.failureException(msg.format(paths=paths, not_exist=not_exist))
+                    msg = """Expect to see all of these files: {paths}.\n\nHowever, these files cannot be found: {not_exist}"""
+            raise self.failureException(
+                msg.format(paths=path_strs, not_exist=not_exist_strs)
+            )
 
     def assertCommandSuccessful(
         self, result: CommandResult, msg_template: str = COMMAND_FAILED_TEXT_TEMPLATE
-    ):
+    ) -> None:
+        """Pass if the command run successfully."""
         if not result.success:
             msg = msg_template.format(command=result.command, output=result.output)
             raise self.failureException(msg)
+
+    def assertCommandOutputEqual(
+        self, result: CommandResult, expected_output: str, msg: Optional[str] = None
+    ) -> None:
+        """
+        Pass if the command's output is equal to `output`.
+
+        The `msg` will be formatted with  `command`, `expected_output`, `output`
+        """
+        if msg is None:
+            msg = """
+Expect to see output:\n\n{expected_output}
+\nHowever, the command '{command}' produces the following output:\n\n{output}
+"""
+        raise self.failureException(
+            msg.format(
+                expected_output=expected_output,
+                command=result.command,
+                output=result.output,
+            )
+        )
 
 
 class GeneratorBase:

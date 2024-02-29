@@ -12,6 +12,7 @@ if-a-target-exist to GNU Make itself as well.
 from __future__ import annotations
 
 import re
+import shutil
 from pathlib import Path
 from typing import Optional
 
@@ -26,14 +27,18 @@ RULE_PATTERN = re.compile(
 VAR_DEF_PATTERN = re.compile(r"(?P<name>[\w\.-]+)\s*(:*|\?|!|\+)?=\s*(?P<value>.*)")
 
 
-def run_targets(targets: list[str], cwd: Optional[str | Path] = None) -> CommandResult:
+def run_targets(
+    targets: list[str],
+    makefile_name: str = "answer.mk",
+    cwd: Optional[str | Path] = None,
+) -> CommandResult:
     """
     Invoke the target(s) in the Makefile.
 
     Return True if the call is successful, False otherwise.
     Also return the output of the executation.
     """
-    return run_executable(["make"] + targets, cwd=cwd)
+    return run_executable(["make", "-f", makefile_name] + targets, cwd=cwd)
 
 
 class Rule:
@@ -167,18 +172,31 @@ class Makefile:
 
 
 class MakefileBaseTestCase(BaseTestCase):
+    makefile_path: str | Path
+    makefile: Makefile  # Assign during setUpClass.
+
     @classmethod
     def setUpClass(cls) -> None:
-        if not hasattr(cls, "makefile_name"):
-            raise AttributeError("'makefile_name' is required")
+        if not hasattr(cls, "makefile_path"):
+            raise AttributeError("'makefile_path' is required")
 
-        if isinstance(cls.makefile_name, str):
-            cls.makefile_name = Path(cls.makefile_name)
+        if isinstance(cls.makefile_path, str):
+            cls.makefile_path = Path(cls.makefile_path)
 
-        if not cls.makefile_name.exists():
-            assert False, f"Expect a file '{cls.makefile_name}', but it does not exist."
+        if not cls.makefile_path.exists():
+            assert False, f"Expect a file '{cls.makefile_path}', but it does not exist."
 
-        cls.makefile = Makefile.from_path(cls.makefile_name)
+        cls.makefile = Makefile.from_path(cls.makefile_path)
+
+    def copy_makefile(
+        self, dest: Optional[Path] = None, as_name: str = "answer.mk"
+    ) -> None:
+        """Copy the student's Makefile.
+
+        When `dest` is `None`, make a copy of the student's Makefile in the same folder but
+        with the name `answer.mk`.
+        """
+        shutil.copy(self.makefile_path, self.temporary_dir_path / as_name)
 
     def assertHasRuleForTarget(
         self,
