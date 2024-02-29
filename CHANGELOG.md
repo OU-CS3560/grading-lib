@@ -2,6 +2,11 @@
 
 ## Unreleased / Changes on the main branch
 
+## v0.1.0rc2
+
+- Fix `BaseTestCase.assertCommandOutputEqual` not checking if the outputs are equal.
+- Fix `BaseTestCase.assertAllFilesExist` raise exception if file does not exist too early.
+
 ## v0.1.0rc1
 
 - Add `BaseTestCase.with_temporary_dir`. A metaclass `BaseTestCaseMeta`

@@ -165,8 +165,7 @@ class BaseTestCase(unittest.TestCase, metaclass=BaseTestCaseMeta):
         for path in paths:
             if not path.exists():
                 not_exist.append(path)
-
-            if not path.is_file():
+            elif not path.is_file():
                 raise self.failureException(
                     f"Expect a file, but '{str(path)}' is not a file."
                 )
@@ -199,18 +198,19 @@ class BaseTestCase(unittest.TestCase, metaclass=BaseTestCaseMeta):
 
         The `msg` will be formatted with  `command`, `expected_output`, `output`
         """
-        if msg is None:
-            msg = """
+        if result.output != expected_output:
+            if msg is None:
+                msg = """
 Expect to see output:\n\n{expected_output}
 \nHowever, the command '{command}' produces the following output:\n\n{output}
 """
-        raise self.failureException(
-            msg.format(
-                expected_output=expected_output,
-                command=result.command,
-                output=result.output,
+            raise self.failureException(
+                msg.format(
+                    expected_output=expected_output,
+                    command=result.command,
+                    output=result.output,
+                )
             )
-        )
 
 
 class GeneratorBase:
