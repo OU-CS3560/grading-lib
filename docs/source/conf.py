@@ -25,7 +25,10 @@ templates_path = ["_templates"]
 exclude_patterns: list[str] = []
 
 autodoc2_packages = [
-    "../../grading_lib",
+    {
+        "path": "../../grading_lib",
+        "auto_mode": False,
+    },
 ]
 
 

@@ -1,6 +1,8 @@
-# Changelog
+<!-- This file is included in the documentation so the header is removed. -->
 
-## Unreleased / Changes on the main branch
+## Unreleased
+
+- Switch to manual API listing.
 
 ## v0.1.0
 

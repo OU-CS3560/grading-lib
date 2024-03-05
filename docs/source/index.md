@@ -13,12 +13,27 @@ python -m pip install cs3560-grading-lib
 - Base class for a test case.
 - Utilities functions to grade make related problems.
 
+## Documentation
+
+<!-- Highly inspired by click's documentation structure -->
 
 ```{toctree}
-:hidden:
 getting-started.md
 problem-authoring.md
 problem-toml-spec.md
+```
+
+## API Reference
+
+```{toctree}
+:maxdepth: 2
+api.rst
+```
+
+## Miscellaneous Pages
+
+```{toctree}
+:maxdepth: 2
 roadmaps.md
-apidocs/index.rst
+changelog.md
 ```

@@ -24,9 +24,9 @@ The grading lib offers powerful utilities for authoring a grading script
 for a build system related problem. Here are some notable example of such
 utilities.
 
-- {py:obj}`grading_lib.makefile.run_targets` that runs a target (or targets)
-  in a `Makefile` and return the {py:obj}`grading_lib.common.CommandResult`.
-- A class {py:obj}`grading_lib.makefile.Makefile` that offer high-level parsing
+- {py:obj}`makefile.run_targets <grading_lib.makefile.run_targets>` that runs a target (or targets)
+  in a `Makefile` and return the {py:obj}`CommandResult <grading_lib.common.CommandResult>`.
+- A class {py:obj}`makefile.Makefile <grading_lib.makefile.Makefile>` that offer high-level parsing
   for a `Makefile`.
 
 ## Git Problems
