@@ -17,7 +17,12 @@ classifiers = [
     "Natural Language :: English",
     "Topic :: Education :: Testing",
 ]
-dependencies = ["click", "tomli", "GitPython", 'importlib-metadata; python_version>="3.10"']
+dependencies = [
+    "click",
+    "tomli",
+    "GitPython",
+    'importlib-metadata; python_version>="3.10"',
+]
 
 [project.optional-dependencies]
 dev = ["pytest", "pytest-cov", "mypy", "ruff", "tox"]
@@ -43,15 +48,19 @@ show-source = true
 
 [tool.ruff.lint]
 select = [
-    "B",  # flake8-bugbear
-    "E",  # pycodestyle error
-    "F",  # pyflakes
-    "I",  # isort
-    "RUF",  # ruff-specific rules
+    "B",   # flake8-bugbear
+    "E",   # pycodestyle error
+    "F",   # pyflakes
+    "I",   # isort
+    "RUF", # ruff-specific rules
     "UP",  # pyupgrade
-    "W",  # pycodestyle warning
+    "W",   # pycodestyle warning
 ]
 ignore-init-module-imports = true
+
+[tool.ruff.isort]
+# So the imports in tests/ still sort the same way.
+known-first-party = ["grading_lib"] 
 
 [tool.mypy]
 files = ["grading_lib"]

@@ -23,7 +23,7 @@ def main(args):
         target_dir = Path(target_dir)
 
     if not target_dir.exists():
-        print(f"[error]: target directory '{str(target_dir)}' does not exist")
+        print(f"[error]: target directory '{target_dir!s}' does not exist")
         sys.exit(1)
 
     out_dir = args.out_dir

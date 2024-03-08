@@ -31,7 +31,7 @@ def summary_command() -> None:
     total_points = sum(problem_points)
     print(f"Problem Count: {len(problems)}")
     print(f"Total Points: {total_points:.2f}")
-    for problem, points in zip(problems, problem_points):
+    for problem, points in zip(problems, problem_points, strict=False):
         name = problem["problem"]["name"]
         score_section = f"{points:.2f} / {total_points:.2f}"
         print(f" - {name:<40} {score_section:>20}")

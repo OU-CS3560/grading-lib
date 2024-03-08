@@ -14,7 +14,6 @@ from __future__ import annotations
 import re
 import shutil
 from pathlib import Path
-from typing import Optional
 
 from .common import BaseTestCase, CommandResult, is_debug_mode, run_executable
 
@@ -30,7 +29,7 @@ VAR_DEF_PATTERN = re.compile(r"(?P<name>[\w\.-]+)\s*(:*|\?|!|\+)?=\s*(?P<value>.
 def run_targets(
     targets: list[str],
     makefile_name: str = "answer.mk",
-    cwd: Optional[str | Path] = None,
+    cwd: str | Path | None = None,
 ) -> CommandResult:
     """
     Invoke the target(s) in the Makefile.
@@ -93,7 +92,7 @@ class Makefile:
 
     @classmethod
     def from_path(cls, path: Path | str) -> Makefile:
-        with open(path, "r") as f:
+        with open(path) as f:
             content = f.read()
             return cls.from_text(content)
 
@@ -104,7 +103,7 @@ class Makefile:
         rules: list[Rule] = []
 
         lines = [l.replace("\r", "") for l in text.split("\n")]
-        current_rule: Optional[Rule] = None
+        current_rule: Rule | None = None
         for line in lines:
             line = line.strip()
 
@@ -159,7 +158,7 @@ class Makefile:
             rules.append(current_rule)
         return cls("memory://Makefile", rules)
 
-    def get_rule(self, targets: str | list[str]) -> Optional[Rule]:
+    def get_rule(self, targets: str | list[str]) -> Rule | None:
         for rule in self.rules:
             if rule.targets == targets:
                 return rule
@@ -189,7 +188,7 @@ class MakefileBaseTestCase(BaseTestCase):
         cls.makefile = Makefile.from_path(cls.makefile_path)
 
     def copy_makefile(
-        self, dest: Optional[Path] = None, as_name: str = "answer.mk"
+        self, dest: Path | None = None, as_name: str = "answer.mk"
     ) -> None:
         """Copy the student's Makefile.
 
@@ -217,9 +216,7 @@ class MakefileBaseTestCase(BaseTestCase):
     ):
         rule = self.makefile.get_rule(target_name)
         if rule is None:
-            msg = "Rule for a target '{target_name}' does not exist. Its behavior cannot be verified.".format(
-                target_name=target_name
-            )
+            msg = f"Rule for a target '{target_name}' does not exist. Its behavior cannot be verified."
             raise self.failureException(msg)
         if not rule.is_empty():
             msg = msg_template.format(target_name=target_name)

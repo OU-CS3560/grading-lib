@@ -30,7 +30,7 @@ def collect_autograding_tests_command(src_dir, out_dir):
         src_dir = Path(src_dir)
 
     if not src_dir.exists():
-        print(f"[error]: target directory '{str(src_dir)}' does not exist")
+        print(f"[error]: target directory '{src_dir!s}' does not exist")
         click.exit(1)
 
     if isinstance(out_dir, str):

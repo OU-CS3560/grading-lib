@@ -1,6 +1,6 @@
 import pytest
 
-from grading_lib.makefile import Makefile, VariableDefinition
+from grading_lib.makefile import Makefile
 
 
 @pytest.fixture

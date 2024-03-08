@@ -1,4 +1,3 @@
-import click
 
 from grading_lib.cli import cli
 

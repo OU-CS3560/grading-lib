@@ -1,13 +1,11 @@
 import datetime
 import os
-import random
 import subprocess
 import tempfile
 import time
 import unittest
 from collections import namedtuple
 from pathlib import Path
-from typing import Optional
 
 COMMAND_FAILED_TEXT_TEMPLATE = "An error occurred while trying to run a command '{command}'. The command's output is\n\n{output}"
 FILE_NOT_EXIST_TEXT_TEMPLATE = "File '{path}' does not exist"
@@ -73,7 +71,7 @@ def populate_folder_with_filenames(path: Path | str, filnames: list[str]):
 CommandResult = namedtuple("CommandResult", ["success", "command", "output"])
 
 
-def run_executable(args, cwd: Optional[str | Path] = None) -> CommandResult:
+def run_executable(args, cwd: str | Path | None = None) -> CommandResult:
     """
     Run a command at the cwd.
 
@@ -167,7 +165,7 @@ class BaseTestCase(unittest.TestCase, metaclass=BaseTestCaseMeta):
                 not_exist.append(path)
             elif not path.is_file():
                 raise self.failureException(
-                    f"Expect a file, but '{str(path)}' is not a file."
+                    f"Expect a file, but '{path!s}' is not a file."
                 )
 
         if len(not_exist) != 0:
@@ -191,7 +189,7 @@ class BaseTestCase(unittest.TestCase, metaclass=BaseTestCaseMeta):
             raise self.failureException(msg)
 
     def assertCommandOutputEqual(
-        self, result: CommandResult, expected_output: str, msg: Optional[str] = None
+        self, result: CommandResult, expected_output: str, msg: str | None = None
     ) -> None:
         """
         Pass if the command's output is equal to `output`.

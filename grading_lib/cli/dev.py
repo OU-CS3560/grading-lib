@@ -24,5 +24,5 @@ def run_mypy_command():
     problems = load_problems_metadata()
     for metadata in problems:
         target_dir = Path(".") / metadata["problem"]["name"] / "scripts"
-        click.echo(f"Running mypy for {str(target_dir)} ...")
+        click.echo(f"Running mypy for {target_dir!s} ...")
         subprocess.run([sys.executable, "-m", "mypy", target_dir])
