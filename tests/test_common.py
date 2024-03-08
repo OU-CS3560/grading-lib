@@ -6,7 +6,11 @@ from pathlib import Path
 import pytest
 
 from grading_lib import is_debug_mode
-from grading_lib.common import get_mtime_as_datetime, has_file_changed
+from grading_lib.common import (
+    get_mtime_as_datetime,
+    get_seed_from_env,
+    has_file_changed,
+)
 
 
 def test_is_debug_mode():
@@ -22,6 +26,12 @@ def test_is_debug_mode():
         else:
             os.environ["test_DEBUG"] = val
         assert is_debug_mode("test_DEBUG") is False
+
+
+def test_get_seed_from_env():
+    val = 123
+    os.environ["test_SEED"] = str(val)
+    assert get_seed_from_env("test_SEED") == val
 
 
 @pytest.fixture
