@@ -27,7 +27,7 @@ python -m build
 To locally install, run
 
 ```console
-python -m pip install -e ".[dev]"
+python -m pip install -e ".[dev,doc]" --config-settings editable_mode=compat
 ```
 
 ## Running the tests

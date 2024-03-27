@@ -26,7 +26,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest", "pytest-cov", "mypy", "ruff", "tox"]
-doc = ["sphinx", "myst-parser", "sphinx-book-theme", "sphinx-autodoc2"]
+doc = ["sphinx", "myst-parser", "sphinx-book-theme", "sphinx-autodoc2@git+https://github.com/krerkkiat/sphinx-autodoc2.git@krerkkiat/fix-17"]
 
 [project.urls]
 Documentation = "https://grading-lib.readthedocs.io/en/latest/"
@@ -58,7 +58,7 @@ select = [
 ]
 ignore-init-module-imports = true
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 # So the imports in tests/ still sort the same way.
 known-first-party = ["grading_lib"] 
 

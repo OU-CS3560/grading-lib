@@ -24,12 +24,19 @@ extensions = ["myst_parser", "autodoc2"]
 templates_path = ["_templates"]
 exclude_patterns: list[str] = []
 
+autodoc2_docstring_parser_regexes = [
+    # this will render all docstrings as 'MyST' Markdown
+    (r".*", "myst"),
+]
+autodoc2_render_plugin = "myst"
 autodoc2_packages = [
     {
         "path": "../../grading_lib",
         "auto_mode": False,
     },
 ]
+
+myst_enable_extensions = ["fieldlist"]
 
 
 # -- Options for HTML output -------------------------------------------------

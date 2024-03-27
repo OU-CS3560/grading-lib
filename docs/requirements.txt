@@ -2,4 +2,4 @@
 sphinx
 myst-parser
 sphinx-book-theme
-sphinx-autodoc2
+git+https://github.com/krerkkiat/sphinx-autodoc2.git@krerkkiat/fix-17

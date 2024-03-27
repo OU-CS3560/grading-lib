@@ -1,6 +1,6 @@
 # API Reference
 
-## Common Components
+## Common Module
 
 ```{autodoc2-summary}
 :renderer: myst
@@ -15,34 +15,27 @@
 ```
 
 ```{autodoc2-object} grading_lib.common.BaseTestCase
-render_plugin = "myst"
 ```
 
 ```{autodoc2-object} grading_lib.common.CommandResult
-render_plugin = "myst"
 ```
 
 ```{autodoc2-object} grading_lib.common.is_debug_mode
-render_plugin = "myst"
 ```
 
 ```{autodoc2-object} grading_lib.common.run_executable
-render_plugin = "myst"
 ```
 
 ```{autodoc2-object} grading_lib.common.get_mtime_as_datetime
-render_plugin = "myst"
 ```
 
 ```{autodoc2-object} grading_lib.common.has_file_changed
-render_plugin = "myst"
 ```
 
 ```{autodoc2-object} grading_lib.common.populate_folder_with_filenames
-render_plugin = "myst"
 ```
 
-## Makefile Related Components
+## Makefile Module
 
 ```{autodoc2-summary}
 :renderer: myst
@@ -55,21 +48,27 @@ render_plugin = "myst"
 ```
 
 ```{autodoc2-object} grading_lib.makefile.MakefileBaseTestCase
-render_plugin = "myst"
 ```
 
 ```{autodoc2-object} grading_lib.makefile.run_targets
-render_plugin = "myst"
 ```
 
 ```{autodoc2-object} grading_lib.makefile.Makefile
-render_plugin = "myst"
 ```
 
 ```{autodoc2-object} grading_lib.makefile.Rule
-render_plugin = "myst"
 ```
 
 ```{autodoc2-object} grading_lib.makefile.VariableDefinition
-render_plugin = "myst"
+```
+
+## (Git) Repository Module
+
+```{autodoc2-summary}
+:renderer: myst
+
+~grading_lib.repository.Repository
+```
+
+```{autodoc2-object} grading_lib.repository.Repository
 ```

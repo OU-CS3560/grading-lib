@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- Switch to manual API listing.
+- (docs) Switch to manual API listing.
+- (docs) Pin `sphinx-autodoc2` to our own fork before its [#17](https://github.com/sphinx-extensions2/sphinx-autodoc2/issues/17) is fixed.
 
 ## v0.1.0
 
