@@ -37,7 +37,7 @@ def run_targets(
     Return True if the call is successful, False otherwise.
     Also return the output of the executation.
     """
-    return run_executable(["make", "-f", makefile_name] + targets, cwd=cwd)
+    return run_executable(["make", "-f", makefile_name, *targets], cwd=cwd)
 
 
 class Rule:
@@ -102,7 +102,7 @@ class Makefile:
 
         rules: list[Rule] = []
 
-        lines = [l.replace("\r", "") for l in text.split("\n")]
+        lines = [line.replace("\r", "") for line in text.split("\n")]
         current_rule: Rule | None = None
         for line in lines:
             line = line.strip()
@@ -182,8 +182,9 @@ class MakefileBaseTestCase(BaseTestCase):
         if isinstance(cls.makefile_path, str):
             cls.makefile_path = Path(cls.makefile_path)
 
-        if not cls.makefile_path.exists():
-            assert False, f"Expect a file '{cls.makefile_path}', but it does not exist."
+        assert (
+            not cls.makefile_path.exists()
+        ), f"Expect a file '{cls.makefile_path}', but it does not exist."
 
         cls.makefile = Makefile.from_path(cls.makefile_path)
 

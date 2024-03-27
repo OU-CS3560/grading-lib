@@ -16,7 +16,7 @@ NAME_POOL = ["herta", "cat", "dog", "dolphin", "falcon", "dandilion", "fox", "je
 
 def is_debug_mode(
     variable_name: str = "DEBUG",
-    vals_for_true: list[str] = ["true", "t", "on", "1"],
+    vals_for_true: list[str] = ("true", "t", "on", "1"),
 ) -> bool:
     """Return True if the DEBUG envrionment variable is presence with value representing 'True'."""
     raw_val = os.environ.get(variable_name, None)
@@ -35,7 +35,7 @@ def get_seed_from_env(variable_name: str = "SEED") -> int:
     if raw_val is not None:
         try:
             seed_val = int(raw_val)
-        except:
+        except ValueError:
             pass
 
     return seed_val

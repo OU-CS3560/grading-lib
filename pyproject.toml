@@ -56,6 +56,9 @@ select = [
     "UP",  # pyupgrade
     "W",   # pycodestyle warning
 ]
+ignore = [
+    "E501"  # Line too long
+]
 ignore-init-module-imports = true
 
 [tool.ruff.lint.isort]

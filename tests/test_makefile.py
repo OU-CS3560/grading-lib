@@ -22,7 +22,7 @@ def makefile_2():
     return """
 # https://www.gnu.org/software/make/manual/html_node/Phony-Targets.html
 
-.PHONY: Date 
+.PHONY: Date
 
 weekend := $(shell date  | grep -E '^(Sat|Sun)' | wc -l | tr -d ' ')
 
@@ -80,16 +80,16 @@ def test_makefile_from_text(makefile_1):
     """
 
     try:
-        mk = Makefile.from_text(makefile_1)
+        _ = Makefile.from_text(makefile_1)
     except Exception:
-        assert False, "Exception raises while parsing a makefile."
+        pytest.fail("Exception raises while parsing a makefile.")
 
 
 def test_makefile_from_text_2(makefile_2):
     try:
         mk = Makefile.from_text(makefile_2)
     except Exception:
-        assert False, "Exception raises while parsing a makefile."
+        pytest.fail("Exception raises while parsing a makefile.")
 
     assert mk.rules[0].is_empty()
     assert not mk.rules[1].is_empty()
@@ -99,7 +99,7 @@ def test_makefile_from_text_3(makefile_3):
     try:
         mk = Makefile.from_text(makefile_3)
     except Exception:
-        assert False, "Exception raises while parsing a makefile."
+        pytest.fail("Exception raises while parsing a makefile.")
 
     assert mk.has_rule("a")
     assert mk.get_rule("a").prerequisites == ["e", "f"]
@@ -117,6 +117,6 @@ def test_makefile_from_text_3(makefile_3):
 
 def test_makefile_var_defs_parsing(makefile_var_defs):
     try:
-        mk = Makefile.from_text(makefile_var_defs)
+        _ = Makefile.from_text(makefile_var_defs)
     except Exception:
-        assert False, "Exception raises while parsing a makefile."
+        pytest.fail("Exception raises while parsing a makefile.")

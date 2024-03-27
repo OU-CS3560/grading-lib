@@ -19,6 +19,6 @@ def get_problem_total_points(problem: dict) -> float:
     if "tests" not in problem["problem"]:
         return total_points
 
-    for key, test in problem["problem"]["tests"].items():
+    for _, test in problem["problem"]["tests"].items():
         total_points += test["points"]
     return total_points
