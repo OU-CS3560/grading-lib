@@ -8,13 +8,13 @@ from ..util import load_problems_metadata
 
 
 @click.group()
-def dev():
+def dev() -> None:
     """Grading script's development related commands."""
     pass
 
 
 @dev.command(name="mypy")
-def run_mypy_command():
+def run_mypy_command() -> None:
     """
     Run mypy on each problem's scripts/ individually.
 

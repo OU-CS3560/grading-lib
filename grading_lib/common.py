@@ -6,6 +6,9 @@ import time
 import unittest
 from collections import namedtuple
 from pathlib import Path
+from typing import Any, TypeVar
+
+T = TypeVar("T")
 
 COMMAND_FAILED_TEXT_TEMPLATE = "An error occurred while trying to run a command '{command}'. The command's output is\n\n{output}"
 FILE_NOT_EXIST_TEXT_TEMPLATE = "File '{path}' does not exist"
@@ -16,7 +19,7 @@ NAME_POOL = ["herta", "cat", "dog", "dolphin", "falcon", "dandilion", "fox", "je
 
 def is_debug_mode(
     variable_name: str = "DEBUG",
-    vals_for_true: list[str] = ("true", "t", "on", "1"),
+    vals_for_true: tuple[str, ...] = ("true", "t", "on", "1"),
 ) -> bool:
     """Return True if the DEBUG envrionment variable is presence with value representing 'True'."""
     raw_val = os.environ.get(variable_name, None)
@@ -55,7 +58,7 @@ def has_file_changed(last_known_mtime: datetime.datetime, path: Path | str) -> b
     return new_mtime > last_known_mtime
 
 
-def populate_folder_with_filenames(path: Path | str, filnames: list[str]):
+def populate_folder_with_filenames(path: Path | str, filnames: list[str]) -> None:
     if isinstance(path, str):
         path = Path(path)
     if not path.exists():
@@ -71,7 +74,7 @@ def populate_folder_with_filenames(path: Path | str, filnames: list[str]):
 CommandResult = namedtuple("CommandResult", ["success", "command", "output"])
 
 
-def run_executable(args, cwd: str | Path | None = None) -> CommandResult:
+def run_executable(args: list[str], cwd: str | Path | None = None) -> CommandResult:
     """
     Run a command at the cwd.
 
@@ -96,18 +99,18 @@ class MinimalistTestResult(unittest.TextTestResult):
     Traceback is too verbose for our purpose.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.dots = False
 
-    def getDescription(self, test):
+    def getDescription(self, test: unittest.TestCase) -> str:
         doc_first_line = test.shortDescription()
         if self.descriptions and doc_first_line:
             return doc_first_line
         else:
             return str(test)
 
-    def addFailure(self, test, err):
+    def addFailure(self, test: unittest.TestCase, err) -> None:
         self.failures.append((test, str(err[1]) + "\n"))
         self._mirrorOutput = True
 
@@ -119,7 +122,7 @@ class MinimalistTestResult(unittest.TextTestResult):
 
 
 class BaseTestCaseMeta(type):
-    def __new__(cls, name: str, bases, attrs: dict):
+    def __new__(cls: T, name: str, bases: list[Any], attrs: dict[str, Any]) -> T:
         if "with_temporary_dir" not in attrs:
             attrs["with_temporary_dir"] = False
 
@@ -136,7 +139,7 @@ class BaseTestCase(unittest.TestCase, metaclass=BaseTestCaseMeta):
 
     with_temporary_dir: bool  # Added by metaclass.
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.is_debug_mode = is_debug_mode()
         self.seed = get_seed_from_env()
 
@@ -146,7 +149,7 @@ class BaseTestCase(unittest.TestCase, metaclass=BaseTestCaseMeta):
             self.temporary_dir_path = Path(self.temporary_dir.name)
 
     def tearDown(self) -> None:
-        if not self.is_debug_mode and self.with_temporary_dir:
+        if not self.is_debug_mode and self.temporary_dir is not None:
             self.temporary_dir.cleanup()
 
     def assertFileExists(
@@ -157,7 +160,7 @@ class BaseTestCase(unittest.TestCase, metaclass=BaseTestCaseMeta):
             msg = msg_template.format(path=str(path))
             raise self.failureException(msg)
 
-    def assertAllFilesExist(self, paths: list[Path], msg=None) -> None:
+    def assertAllFilesExist(self, paths: list[Path], msg: str | None = None) -> None:
         """Pass if all the listed files exist."""
         not_exist: list[Path] = []
         for path in paths:

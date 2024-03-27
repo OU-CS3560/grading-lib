@@ -1,11 +1,12 @@
 from pathlib import Path
+from typing import Any
 
 import tomli
 
 
-def load_problems_metadata(path=Path(".")) -> list[dict]:
+def load_problems_metadata(path: Path = Path(".")) -> list[dict[str, Any]]:
     """Parse all problem.toml of problems."""
-    problems: list[dict] = []
+    problems: list[dict[str, Any]] = []
     for problem_file_path in path.glob("*/problem.toml"):
         with open(problem_file_path, "rb") as in_file:
             data = tomli.load(in_file)
@@ -13,7 +14,7 @@ def load_problems_metadata(path=Path(".")) -> list[dict]:
     return problems
 
 
-def get_problem_total_points(problem: dict) -> float:
+def get_problem_total_points(problem: dict[str, Any]) -> float:
     total_points = 0.0
 
     if "tests" not in problem["problem"]:

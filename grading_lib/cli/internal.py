@@ -6,7 +6,7 @@ import tomli
 
 
 @click.group()
-def internal():
+def internal() -> None:
     """
     Commands that are not meant for user's direct use.
 
@@ -19,7 +19,10 @@ def internal():
 @internal.command(name="collect-autograding-tests")
 @click.argument("src_dir", required=False, default=".")
 @click.option("--out-dir", default=Path(".") / ".github" / "classroom")
-def collect_autograding_tests_command(src_dir, out_dir):
+@click.pass_context
+def collect_autograding_tests_command(
+    ctx: click.Context, src_dir: str | Path, out_dir: str | Path
+) -> None:
     """
     Collect all test cases and put them in .github/classroom/autograding.json.
 
@@ -30,7 +33,7 @@ def collect_autograding_tests_command(src_dir, out_dir):
 
     if not src_dir.exists():
         print(f"[error]: target directory '{src_dir!s}' does not exist")
-        click.exit(1)
+        ctx.exit(1)
 
     if isinstance(out_dir, str):
         out_dir = Path(out_dir)

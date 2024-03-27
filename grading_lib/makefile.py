@@ -97,7 +97,7 @@ class Makefile:
             return cls.from_text(content)
 
     @classmethod
-    def from_text(cls, text: str):
+    def from_text(cls, text: str) -> Makefile:
         DEBUG: bool = is_debug_mode()
 
         rules: list[Rule] = []
@@ -202,7 +202,7 @@ class MakefileBaseTestCase(BaseTestCase):
         self,
         target_name: str,
         msg_template: str = "Rule for a target '{target_name}' does not exist. Its behavior cannot be verified.",
-    ):
+    ) -> None:
         """
         The Makefile must have target `target_name`.
         """
@@ -214,7 +214,7 @@ class MakefileBaseTestCase(BaseTestCase):
         self,
         target_name: str,
         msg_template: str = "Recipe of the rule for a target '{target_name}' is not empty.",
-    ):
+    ) -> None:
         rule = self.makefile.get_rule(target_name)
         if rule is None:
             msg = f"Rule for a target '{target_name}' does not exist. Its behavior cannot be verified."

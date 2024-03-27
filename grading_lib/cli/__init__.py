@@ -6,13 +6,13 @@ from .internal import internal
 
 
 @click.group()
-def cli():
+def cli() -> None:
     pass
 
 
 @cli.command(name="help")
 @click.pass_context
-def show_help(ctx):
+def show_help(ctx: click.Context) -> None:
     """Show this help messages."""
     click.echo(cli.get_help(ctx))
 

@@ -9,12 +9,13 @@ import json
 import os
 import sys
 import warnings
+from argparse import Namespace
 from pathlib import Path
 
 import tomli
 
 
-def main(args):
+def main(args: Namespace) -> None:
     warnings.warn(
         "This is depreated in the favor of cli module", DeprecationWarning, stacklevel=2
     )
