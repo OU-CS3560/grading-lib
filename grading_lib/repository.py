@@ -15,6 +15,7 @@ class Repository:
     :param path: A path to repository folder. A path to a `.tar.gz` file is also
     acceptable, but [cleanup()](#grading_lib.repository.Repository.cleanup) must be called to delete the temporary
     directory.
+    :raise ValueError: When the repository does not have a working tree directory.
     """
 
     def __init__(self, path: str | Path, *args, **kwargs):
@@ -38,7 +39,18 @@ class Repository:
             else:
                 self.repo = Repo.init(path)
 
+        if self.repo.working_tree_dir is None:
+            raise ValueError(
+                "A repository must have a working tree directory (Repo.working_tree_dir must not be None)."
+            )
+
+        self.working_tree_dir = Path(self.repo.working_tree_dir)
+
     def cleanup(self) -> None:
+        """Remove the temporary directory.
+
+        Must be called when the path given to the `__init__` is a gzipped archive file.
+        """
         if self.temp_dir is not None:
             self.temp_dir.cleanup()
 
@@ -49,27 +61,40 @@ class Repository:
         This function will not clean up the archive file. However, if this
         repository is part of the temporary directory `self.temp_dir`, the archive
         will get deleted when the temporary directory is deleted.
-
-        :raise ValueError: When the repository does not have a working tree directory.
         """
-        if self.repo.working_tree_dir is None:
-            raise ValueError(
-                "A repository must have a working tree directory (Repo.working_tree_dir must not be None)."
-            )
-
-        repo_dir_path = Path(self.repo.working_tree_dir)
-        # archive_file_path = repo_dir_path / ".." / repo_dir_path.with_suffix(".tar.gz")
-
         subprocess.check_call(
             [
                 "tar",
                 "-czf",
                 path,
                 "-C",
-                repo_dir_path / "..",
-                repo_dir_path.name,
+                self.working_tree_dir / "..",
+                self.working_tree_dir.name,
             ]
         )
+
+    def create_and_add_random_file(
+        self, name: str | None = None, content: str | None = None
+    ) -> str:
+        """
+        Create a file with `name` and `content` then add it to the index.
+
+        :param name: If specified, this name will be used instead of the uuid4.
+        :param content: If specified, this will be used as content of the file.
+        Otherwise, the name will be used.
+        """
+        if name is None:
+            name = str(uuid.uuid4())
+
+        if content is None:
+            content = name + "\n"
+
+        with open(self.working_tree_dir / name, "w") as f:
+            f.write(content)
+
+        self.repo.index.add(name, write=True)
+
+        return name
 
     def create_random_commits(self, amount: int, branch: Head | None = None) -> None:
         """Create random commits on current branch.
@@ -77,26 +102,13 @@ class Repository:
         :param amount: The amount of commits to be created.
         :param head: If specified, this branch will be checked out before any
         commit is made. Once done, the current branch will be checked out.
-        :raise ValueError: When the repository does not have a working tree directory.
         """
         previous_branch = self.repo.active_branch
         if branch is not None:
             branch.checkout()
 
-        if self.repo.working_tree_dir is None:
-            raise ValueError(
-                "A repository must have a working tree directory (Repo.working_tree_dir must not be None)."
-            )
-
-        working_tree_dir = Path(self.repo.working_tree_dir)
-
         for _ in range(amount):
-            name = str(uuid.uuid4())
-
-            with open(working_tree_dir / name, "w") as f:
-                f.write(name + "\n")
-
-            self.repo.index.add(name)
+            name = self.create_and_add_random_file()
             self.repo.index.commit(f"Add file {name}")
 
         if branch is not None:
