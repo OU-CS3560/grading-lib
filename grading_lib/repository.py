@@ -5,7 +5,11 @@ import uuid
 from pathlib import Path
 
 from git import Head, Repo
+from git.refs.tag import Tag
 from git.repo.fun import is_git_dir
+from git.util import IterableList
+
+from .common import BaseTestCase
 
 
 class Repository:
@@ -14,7 +18,7 @@ class Repository:
 
     :param path: A path to repository folder. A path to a `.tar.gz` file is also
     acceptable, but [cleanup()](#grading_lib.repository.Repository.cleanup) must be called to delete the temporary
-    directory.
+    directory. The name of the folder inside the archive file must be "repo".
     :raise ValueError: When the repository does not have a working tree directory.
     """
 
@@ -29,10 +33,14 @@ class Repository:
             self.temp_dir = tempfile.TemporaryDirectory(delete=False)
             temp_dir_path = Path(self.temp_dir.name)
             shutil.copy(path, temp_dir_path / path.name)
-            subprocess.run(["tar", "-xzf", temp_dir_path / path.name])
+            subprocess.run(
+                ["tar", "-xzf", temp_dir_path / path.name], cwd=temp_dir_path
+            )
 
-            # .stem is name.tar; .stem[:-4] is then the name.
-            self.repo = Repo(temp_dir_path / path.stem[:-4], *args, **kwargs)
+            # We are not trying to find out what the root folder in the archive file is.
+            # We do not create an archive file that does not have the root folder because
+            # whens student extract the archive file, files will be everywhere.
+            self.repo = Repo(temp_dir_path / "repo", *args, **kwargs)
         else:
             if is_git_dir(path):
                 self.repo = Repo(path, *args, **kwargs)
@@ -45,6 +53,12 @@ class Repository:
             )
 
         self.working_tree_dir = Path(self.repo.working_tree_dir)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.cleanup()
 
     def cleanup(self) -> None:
         """Remove the temporary directory.
@@ -113,3 +127,45 @@ class Repository:
 
         if branch is not None:
             previous_branch.checkout()
+
+    def get_all_tag_refs(self) -> IterableList:
+        return Tag.list_items(self.repo)
+
+    def get_tag_refs_at(self, commit_hash: str) -> list[Tag]:
+        tag_refs = self.get_all_tag_refs()
+        matched_tag_refs = []
+        for tag_ref in tag_refs:
+            if tag_ref.commit.hexsha == commit_hash:
+                matched_tag_refs.append(tag_ref)
+        return matched_tag_refs
+
+
+class RepositoryBaseTestCase(BaseTestCase):
+    def assertHasTagWithNameAt(self, repo: Repository, name: str, commit_hash: str):
+        tag_path = "refs/tags/" + name
+        tag_refs = repo.get_tag_refs_at(commit_hash)
+        for tag_ref in tag_refs:
+            if tag_ref.path == tag_path:
+                return
+
+        raise self.failureException(
+            f"Expect to see a tag '{name}' at commit '{commit_hash}', but found none."
+        )
+
+    def assertHasTagWithNameAndMessageAt(
+        self, repo: Repository, name: str, message: str, commit_hash: str
+    ):
+        tag_path = "refs/tags/" + name
+        tag_refs = repo.get_tag_refs_at(commit_hash)
+        for tag_ref in tag_refs:
+            if (
+                tag_ref.tag is not None
+                and tag_ref.tag.message is not None
+                and tag_ref.path == tag_path
+                and tag_ref.tag.message == message
+            ):
+                return
+
+        raise self.failureException(
+            f"Expect to see a tag '{name}' with message '{message}' at commit '{commit_hash}', but found none."
+        )

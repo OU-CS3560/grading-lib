@@ -30,6 +30,7 @@ def run_targets(
     targets: list[str],
     makefile_name: str = "answer.mk",
     cwd: str | Path | None = None,
+    timeout: float = 15.0,
 ) -> CommandResult:
     """
     Invoke the target(s) in the Makefile.
@@ -37,7 +38,9 @@ def run_targets(
     Return True if the call is successful, False otherwise.
     Also return the output of the executation.
     """
-    return run_executable(["make", "-f", makefile_name, *targets], cwd=cwd)
+    return run_executable(
+        ["make", "-f", makefile_name, *targets], cwd=cwd, timeout=timeout
+    )
 
 
 class Rule:

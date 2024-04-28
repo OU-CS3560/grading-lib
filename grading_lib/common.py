@@ -1,4 +1,5 @@
 import datetime
+import functools
 import os
 import subprocess
 import tempfile
@@ -74,7 +75,9 @@ def populate_folder_with_filenames(path: Path | str, filnames: list[str]) -> Non
 CommandResult = namedtuple("CommandResult", ["success", "command", "output"])
 
 
-def run_executable(args: list[str], cwd: str | Path | None = None) -> CommandResult:
+def run_executable(
+    args: list[str], cwd: str | Path | None = None, timeout: float = 15.0
+) -> CommandResult:
     """
     Run a command at the cwd.
 
@@ -86,10 +89,12 @@ def run_executable(args: list[str], cwd: str | Path | None = None) -> CommandRes
     """
     try:
         make_cmd_output = subprocess.check_output(
-            args, stderr=subprocess.STDOUT, cwd=cwd
+            args, stderr=subprocess.STDOUT, cwd=cwd, timeout=timeout
         )
         return CommandResult(True, " ".join(args), make_cmd_output.decode())
     except subprocess.CalledProcessError as e:
+        return CommandResult(False, " ".join(args), e.output.decode())
+    except subprocess.TimeoutExpired as e:
         return CommandResult(False, " ".join(args), e.output.decode())
 
 
