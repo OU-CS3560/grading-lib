@@ -1,4 +1,5 @@
 import json
+import sys
 from pathlib import Path
 
 from click.testing import CliRunner
@@ -33,8 +34,11 @@ points = 25
 
         result = runner.invoke(collect_autograding_tests_command)
         assert result.exit_code == 0
-        assert result.output == "processing lorem-ipsum/problem.toml\n"
-        expected_file_path = Path("./.github/classroom/autograding.json")
+        if sys.platform == "win32":
+            assert result.output == "processing lorem-ipsum\\problem.toml\n"
+        else:
+            assert result.output == "processing lorem-ipsum/problem.toml\n"
+        expected_file_path = Path(".github") / "classroom" / "autograding.json"
         assert expected_file_path.exists()
         with open(expected_file_path) as f:
             data = json.load(f)

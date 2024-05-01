@@ -92,7 +92,8 @@ def test_populate_folder_with_filenames():
         expected_files = ["a", "b", "c"]
         populate_folder_with_filenames(tmpdir, expected_files)
 
-        result_names = [item.name for item in tmpdir_path.iterdir()]
+        # Order should not matter, we just want check that all files are created.
+        result_names = sorted([item.name for item in tmpdir_path.iterdir()])
 
         assert result_names == expected_files
 
