@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Fix warnings by mypy.
+- Add a default user's identity to the `Repository`. Git on GitHub's Actions will complain
+  when a command like `git commit` is run without user's identity.
 
 ## v0.1.1a2
 

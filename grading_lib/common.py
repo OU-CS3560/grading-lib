@@ -176,7 +176,7 @@ class BaseTestCase(unittest.TestCase, metaclass=BaseTestCaseMeta):
                 f"[info]: The temporary directory at '{self.temporary_dir_path}' is not deleted since the DEBUG is set to True."
             )
 
-    def assertArchiveFileIsGzip(self, path: Path):
+    def assertArchiveFileIsGzip(self, path: Path) -> None:
         cmd_result = run_executable(["gunzip", "-t", str(path)])
         self.assertTrue(
             "not in gzip format" not in cmd_result.output,

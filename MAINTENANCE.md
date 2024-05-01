@@ -67,6 +67,7 @@ make html
 
 ## Deployment flow
 
+- Run tox.
 - Update `grading_lib/VERSION` file.
 - Update `CHANGELOG.md` file.
 - Make a commit

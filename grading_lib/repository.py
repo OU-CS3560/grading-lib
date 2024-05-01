@@ -8,7 +8,6 @@ from pathlib import Path
 from git import Head, Repo
 from git.refs.tag import Tag
 from git.repo.fun import is_git_dir
-from git.util import IterableList
 
 from .common import BaseTestCase, CommandResult, run_executable
 
@@ -54,6 +53,10 @@ class Repository:
                 )
 
             self.repo = Repo(temp_dir_path / "repo", *args, **kwargs)
+            # Some git commands when run on GH Actions need user indentity.
+            with self.repo.config_writer(config_level="repository") as conf_writer:
+                conf_writer.set_value("user.name", "ou-cs3560-grading-script")
+                conf_writer.set_value("user.email", "cs3560-grading-script@ohio.edu")
         else:
             if is_git_dir(path):
                 self.repo = Repo(path, *args, **kwargs)
@@ -70,7 +73,7 @@ class Repository:
     def __enter__(self):
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         self.cleanup()
 
     def cleanup(self) -> None:
@@ -147,7 +150,7 @@ class Repository:
         if branch is not None:
             previous_branch.checkout()
 
-    def get_all_tag_refs(self) -> IterableList:
+    def get_all_tag_refs(self) -> list[Tag]:
         return Tag.list_items(self.repo)
 
     def get_tag_refs_at(self, commit_hash: str) -> list[Tag]:
@@ -167,7 +170,9 @@ class Repository:
 
 
 class RepositoryBaseTestCase(BaseTestCase):
-    def assertHasTagWithNameAt(self, repo: Repository, name: str, commit_hash: str):
+    def assertHasTagWithNameAt(
+        self, repo: Repository, name: str, commit_hash: str
+    ) -> None:
         tag_path = "refs/tags/" + name
         tag_refs = repo.get_tag_refs_at(commit_hash)
         for tag_ref in tag_refs:
@@ -181,7 +186,7 @@ class RepositoryBaseTestCase(BaseTestCase):
 
     def assertHasTagWithNameAndMessageAt(
         self, repo: Repository, name: str, message: str, commit_hash: str
-    ):
+    ) -> None:
         tag_path = "refs/tags/" + name
         tag_refs = repo.get_tag_refs_at(commit_hash)
         for tag_ref in tag_refs:
