@@ -29,7 +29,7 @@ class Repository:
         if isinstance(path, str):
             path = Path(path)
 
-        if "".join(path.suffixes) == ".tar.gz":
+        if path.is_file() and "".join(path.suffixes) == ".tar.gz":
             if sys.version_info < (3, 12, 0):
                 self.temp_dir = tempfile.TemporaryDirectory()
             else:
