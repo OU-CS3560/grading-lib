@@ -65,7 +65,16 @@ cd docs
 make html
 ```
 
-## Manually publish to PyPI
+## Deployment flow
+
+- Update `grading_lib/VERSION` file.
+- Update `CHANGELOG.md` file.
+- Make a commit
+- Tag the commit
+- Push
+- Approve the deployment flow on GitHub Actions.
+
+### Manually publish to PyPI
 
 There should be no need of running these commands manually now that
 the workflow is setup to auto publish to both PyPI and GitHub's Releases.
@@ -73,7 +82,7 @@ the workflow is setup to auto publish to both PyPI and GitHub's Releases.
 Howver, if the workflow is breaking, for example, you can run these
 commands to manually publish.
 
-### Publish to the real PyPI
+#### Publish to the real PyPI
 
 Make sure you build the package.
 
@@ -81,7 +90,7 @@ Make sure you build the package.
 python -m twine upload dist/*
 ```
 
-### Publish to the test PyPI
+#### Publish to the test PyPI
 
 If you want to test something out.
 

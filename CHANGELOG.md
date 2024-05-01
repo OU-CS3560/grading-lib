@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## v0.1.1a2
+
 - Add `ensure_lf_line_ending`.
 - Account for the different of `tempfile.TemporaryDirectory` between 3.12 and 3.10.
 - Add `BaseTestCase.assertArchiveFileIsGzip`
