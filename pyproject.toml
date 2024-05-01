@@ -43,7 +43,7 @@ version = { file = "grading_lib/VERSION" }
 src = ["grading_lib"]
 fix = true
 show-fixes = true
-show-source = true
+output-format = "full"
 
 [tool.ruff.lint]
 select = [
