@@ -17,7 +17,7 @@ def an_empty_folder():
     temp_dir.cleanup()
 
 
-def test_Repository_init(an_empty_folder):
+def test_Repository_init_with_an_empty_folder(an_empty_folder):
     repo = Repository(an_empty_folder.name)
     assert isinstance(repo.working_tree_dir, Path)
 
