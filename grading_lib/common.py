@@ -1,7 +1,7 @@
 import datetime
-import functools
 import os
 import subprocess
+import sys
 import tempfile
 import time
 import unittest
@@ -98,6 +98,16 @@ def run_executable(
         return CommandResult(False, " ".join(args), e.output.decode())
 
 
+def ensure_lf_line_ending(path: Path | str) -> CommandResult:
+    """Run dos2unix on the file at path.
+
+    Students who are using Windows OS may submit answer.sh that has CRLF as its line
+    ending. The CR will ofen get mixed into shell commands in the file and produces
+    strange result / error.
+    """
+    return run_executable(["dos2unix", str(path)])
+
+
 class MinimalistTestResult(unittest.TextTestResult):
     """TextTestResult without the traceback.
 
@@ -150,12 +160,31 @@ class BaseTestCase(unittest.TestCase, metaclass=BaseTestCaseMeta):
 
         self.temporary_dir = None
         if self.with_temporary_dir:
-            self.temporary_dir = tempfile.TemporaryDirectory(dir=Path("."))
+            if sys.version_info < (3, 12, 0):
+                self.temporary_dir = tempfile.TemporaryDirectory(dir=Path("."))
+            else:
+                self.temporary_dir = tempfile.TemporaryDirectory(
+                    dir=Path("."), delete=False
+                )
             self.temporary_dir_path = Path(self.temporary_dir.name)
 
     def tearDown(self) -> None:
         if not self.is_debug_mode and self.temporary_dir is not None:
             self.temporary_dir.cleanup()
+        elif self.is_debug_mode and self.temporary_dir is not None:
+            print(
+                f"[info]: The temporary directory at '{self.temporary_dir_path}' is not deleted since the DEBUG is set to True."
+            )
+
+    def assertArchiveFileIsGzip(self, path: Path):
+        cmd_result = run_executable(["gunzip", "-t", str(path)])
+        self.assertTrue(
+            "not in gzip format" not in cmd_result.output,
+            msg="Hint: Did you forget to use '-z' flag when creating the archive?",
+        )
+        self.assertCommandSuccessful(
+            cmd_result,
+        )
 
     def assertFileExists(
         self, path: Path, msg_template: str = FILE_NOT_EXIST_TEXT_TEMPLATE

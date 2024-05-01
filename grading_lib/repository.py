@@ -1,5 +1,6 @@
 import shutil
 import subprocess
+import sys
 import tempfile
 import uuid
 from pathlib import Path
@@ -9,7 +10,7 @@ from git.refs.tag import Tag
 from git.repo.fun import is_git_dir
 from git.util import IterableList
 
-from .common import BaseTestCase
+from .common import BaseTestCase, CommandResult, run_executable
 
 
 class Repository:
@@ -30,7 +31,10 @@ class Repository:
             path = Path(path)
 
         if "".join(path.suffixes) == ".tar.gz":
-            self.temp_dir = tempfile.TemporaryDirectory(delete=False)
+            if sys.version_info < (3, 12, 0):
+                self.temp_dir = tempfile.TemporaryDirectory()
+            else:
+                self.temp_dir = tempfile.TemporaryDirectory(delete=False)
             temp_dir_path = Path(self.temp_dir.name)
             shutil.copy(path, temp_dir_path / path.name)
             subprocess.run(
@@ -40,6 +44,15 @@ class Repository:
             # We are not trying to find out what the root folder in the archive file is.
             # We do not create an archive file that does not have the root folder because
             # whens student extract the archive file, files will be everywhere.
+            if not (temp_dir_path / "repo").exists():
+                raise FileNotFoundError(
+                    f"Expect the archive to have folder 'repo', but this 'repo' folder cannot be found after extracting '{path.name}'"
+                )
+            if not (temp_dir_path / "repo" / ".git").exists():
+                raise FileNotFoundError(
+                    f"Expect the 'repo' to be a Git repository (it must have .git folder), but '.git' is missing from the 'repo' extracted from '{path.name}'"
+                )
+
             self.repo = Repo(temp_dir_path / "repo", *args, **kwargs)
         else:
             if is_git_dir(path):
@@ -86,6 +99,12 @@ class Repository:
                 self.working_tree_dir.name,
             ]
         )
+
+    def run_executable(self, args: list[str], timeout: float = 15.0) -> CommandResult:
+        """
+        Run a command using repostiory's working directory as cwd.
+        """
+        return run_executable(args, cwd=self.repo.working_tree_dir, timeout=timeout)
 
     def create_and_add_random_file(
         self, name: str | None = None, content: str | None = None
@@ -139,6 +158,13 @@ class Repository:
                 matched_tag_refs.append(tag_ref)
         return matched_tag_refs
 
+    def visualize(self) -> str:
+        """
+        Run 'git log --oneline --all --graph --decorate' and returns the output.
+        """
+        res = self.repo.git.log("--graph", "--all", "--decorate", "--oneline")
+        return res
+
 
 class RepositoryBaseTestCase(BaseTestCase):
     def assertHasTagWithNameAt(self, repo: Repository, name: str, commit_hash: str):
@@ -148,8 +174,9 @@ class RepositoryBaseTestCase(BaseTestCase):
             if tag_ref.path == tag_path:
                 return
 
+        tags_text = "\n".join(tag_ref.path for tag_ref in tag_refs)
         raise self.failureException(
-            f"Expect to see a tag '{name}' at commit '{commit_hash}', but found none."
+            f"Expect to see a tag '{name}' at commit '{commit_hash}', but found none. Tags at commit {commit_hash}:\n{tags_text}"
         )
 
     def assertHasTagWithNameAndMessageAt(
@@ -166,6 +193,14 @@ class RepositoryBaseTestCase(BaseTestCase):
             ):
                 return
 
+        tags_texts = []
+        for tag_ref in tag_refs:
+            if tag_ref.tag is None:
+                text = f"{tag_ref.path}"
+            else:
+                text = f"{tag_ref.path}: {tag_ref.tag.message}"
+            tags_texts.append(text)
+        tags_text = "\n".join(tags_texts)
         raise self.failureException(
-            f"Expect to see a tag '{name}' with message '{message}' at commit '{commit_hash}', but found none."
+            f"Expect to see a tag '{name}' with message '{message}' at commit '{commit_hash}', but found none. Tags at commit {commit_hash}:\n{tags_text}"
         )

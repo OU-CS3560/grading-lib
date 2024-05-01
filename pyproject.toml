@@ -26,7 +26,6 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest", "pytest-cov", "mypy", "ruff", "tox"]
-doc = ["sphinx", "myst-parser", "sphinx-book-theme", "sphinx-autodoc2@git+https://github.com/krerkkiat/sphinx-autodoc2.git@krerkkiat/fix-17"]
 
 [project.urls]
 Documentation = "https://grading-lib.readthedocs.io/en/latest/"

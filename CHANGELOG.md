@@ -2,12 +2,19 @@
 
 ## Unreleased
 
+- Add `ensure_lf_line_ending`.
+- Account for the different of `tempfile.TemporaryDirectory` between 3.12 and 3.10.
+- Add `BaseTestCase.assertArchiveFileIsGzip`
+- Add sanity checks to `Repository` wheh working with `.tar.gz` file.
+- Add `Repository.run_executable` where `cwd` is always set to working directory of the repository.
+- Remove extra dependencies `doc` since we cannot list Git repository as a dependency and upload to PyPI.
+
 ## v0.1.1a1
 
 - (docs) Switch to manual API listing.
 - (docs) Pin `sphinx-autodoc2` to our own fork before its [#17](https://github.com/sphinx-extensions2/sphinx-autodoc2/issues/17) is fixed.
 - Add timeout to `run_executable` since some commands may require human's input and get stuck.
-- Add `grading.repository.RepositoryBaseTestCase`.
+- Add `grading_lib.repository.RepositoryBaseTestCase`.
 - Add `Repository.get_all_tag_refs`.
 - Add `Repository.get_tag_refs_at`.
 - Fix `Repository` from an archive file is using the archive's filename instead of the "repo".
