@@ -2,9 +2,14 @@
 
 ## Unreleased
 
+## v0.1.1a3
+
 - Fix warnings by mypy.
 - Add a default user's identity to the `Repository`. Git on GitHub's Actions will complain
   when a command like `git commit` is run without user's identity.
+- Fix bug in the `MakefileBaseTestCase.setUpClass` where the conversion from `if` to `assert` was incorrect.
+- Handle a command's timeout in `common.run_executable`.
+- Add `repository.ensure_git_author_identity`.
 
 ## v0.1.1a2
 
