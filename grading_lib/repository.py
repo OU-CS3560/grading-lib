@@ -5,11 +5,30 @@ import tempfile
 import uuid
 from pathlib import Path
 
-from git import Head, Repo
-from git.refs.tag import Tag
+from git import Head, Repo, Tag
 from git.repo.fun import is_git_dir
 
 from .common import BaseTestCase, CommandResult, run_executable
+
+
+def ensure_git_author_identity(
+    name="ou-cs3560-grading-script", email="cs3560-grading-script@ohio.edu"
+):
+    """
+    Set user.name and user.email is not set unless they are already set.
+    """
+    existing_user_name = subprocess.run(
+        "git config --get user.name", shell=True, capture_output=True
+    )
+    existing_user_email = subprocess.run(
+        "git config --get user.email", shell=True, capture_output=True
+    )
+
+    if existing_user_name is not None or len(existing_user_name.strip()) == 0:
+        subprocess.run(["git", "config", "--global", "user.name", name])
+
+    if existing_user_email is not None or len(existing_user_email.strip()) == 0:
+        subprocess.run(["git", "config", "--global", "user.email", email])
 
 
 class Repository:

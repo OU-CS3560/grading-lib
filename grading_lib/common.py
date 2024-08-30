@@ -94,8 +94,10 @@ def run_executable(
         return CommandResult(True, " ".join(args), make_cmd_output.decode())
     except subprocess.CalledProcessError as e:
         return CommandResult(False, " ".join(args), e.output.decode())
-    except subprocess.TimeoutExpired as e:
-        return CommandResult(False, " ".join(args), e.output.decode())
+    except subprocess.TimeoutExpired:
+        return CommandResult(
+            False, " ".join(args), f"Command timed out after {timeout} seconds."
+        )
 
 
 def ensure_lf_line_ending(path: Path | str) -> CommandResult:
