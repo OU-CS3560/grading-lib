@@ -186,7 +186,7 @@ class MakefileBaseTestCase(BaseTestCase):
             cls.makefile_path = Path(cls.makefile_path)
 
         assert (
-            not cls.makefile_path.exists()
+            cls.makefile_path.exists()
         ), f"Expect a file '{cls.makefile_path}', but it does not exist."
 
         cls.makefile = Makefile.from_path(cls.makefile_path)
