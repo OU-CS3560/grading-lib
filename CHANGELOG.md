@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## v0.1.1rc1
+
+- Add `qa.SetupThenTearDown`
+- Add `qa.import_as_non_testcase`
+
 ## v0.1.1a3
 
 - Fix warnings by mypy.
