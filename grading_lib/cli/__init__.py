@@ -59,8 +59,10 @@ def rebase_todo_injector_command(todo_items_file_path, path) -> None:
     """
     todo_items_file_path = Path(todo_items_file_path)
     if not todo_items_file_path.exists():
+        # formatter does not correctly format this expression if use in f-string.
+        cwd = Path(".").absolute()
         raise FileNotFoundError(
-            f"Cannot find '{todo_items_file_path}' in the current working directory (cwd='{Path(".").absolute()}')"
+            f"Cannot find '{todo_items_file_path}' in the current working directory (cwd='{cwd}')"
         )
     with open(todo_items_file_path) as in_f:
         todo_items_content = in_f.read()
