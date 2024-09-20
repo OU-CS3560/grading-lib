@@ -178,15 +178,14 @@ class BaseTestCase(unittest.TestCase, metaclass=BaseTestCaseMeta):
                 f"[info]: The temporary directory at '{self.temporary_dir_path}' is not deleted since the DEBUG is set to True."
             )
 
-    def assertArchiveFileIsGzip(self, path: Path) -> None:
-        cmd_result = run_executable(["gunzip", "-t", str(path)])
-        self.assertTrue(
-            "not in gzip format" not in cmd_result.output,
-            msg="Hint: Did you forget to use '-z' flag when creating the archive?",
-        )
-        self.assertCommandSuccessful(
-            cmd_result,
-        )
+    def assertArchiveFileIsGzip(self, path: str | Path) -> None:
+        if isinstance(path, str):
+            path = Path(path)
+        with open(path, "rb") as f:
+            self.assertTrue(
+                f.read(2) == b"\x1f\x8b",
+                msg="Hint: Did you forget to use '-z' flag when creating the archive?",
+            )
 
     def assertFileExists(
         self, path: Path, msg_template: str = FILE_NOT_EXIST_TEXT_TEMPLATE
