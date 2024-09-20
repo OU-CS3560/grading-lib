@@ -4,16 +4,19 @@ import sys
 import tempfile
 import uuid
 from pathlib import Path
+from types import TracebackType
 
 from git import Head, Repo, Tag
 from git.repo.fun import is_git_dir
+from typing_extensions import Self
 
 from .common import BaseTestCase, CommandResult, run_executable
 
 
 def ensure_git_author_identity(
-    name="ou-cs3560-grading-script", email="cs3560-grading-script@ohio.edu"
-):
+    name: str = "ou-cs3560-grading-script",
+    email: str = "cs3560-grading-script@ohio.edu",
+) -> None:
     """
     Set user.name and user.email is not set unless they are already set.
     """
@@ -41,9 +44,9 @@ class Repository:
     :raise ValueError: When the repository does not have a working tree directory.
     """
 
-    def __init__(self, path: str | Path, *args, **kwargs):
+    def __init__(self, path: str | Path, *args, **kwargs) -> None:
         self.repo: Repo
-        self.temp_dir: tempfile.TemporaryDirectory | None = None
+        self.temp_dir: tempfile.TemporaryDirectory[str] | None = None
 
         if isinstance(path, str):
             path = Path(path)
@@ -90,10 +93,15 @@ class Repository:
 
         self.working_tree_dir = Path(self.repo.working_tree_dir)
 
-    def __enter__(self):
+    def __enter__(self) -> Self:
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
         self.cleanup()
 
     def cleanup(self) -> None:

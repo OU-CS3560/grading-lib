@@ -42,7 +42,7 @@ def summary_command() -> None:
 @cli.command(name="rebase-todo-injector")
 @click.argument("todo_items_file_path")
 @click.argument("path")
-def rebase_todo_injector_command(todo_items_file_path, path) -> None:
+def rebase_todo_injector_command(todo_items_file_path: str, path: str) -> None:
     """
     An 'editor' that inject pre-made todo items for git interactive rebase.
 
