@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## v0.1.1rc2
+
+- Fix gunzip is not available on Windows.
+- Fix mypy errors.
+
 ## v0.1.1rc1
 
 - Add `qa.SetupThenTearDown`
