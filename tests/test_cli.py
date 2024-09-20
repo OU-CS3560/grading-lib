@@ -8,7 +8,7 @@ from grading_lib.cli import summary_command
 from grading_lib.cli.internal import collect_autograding_tests_command
 
 
-def test_collect_autograding_tests_command():
+def test_collect_autograding_tests_command() -> None:
     runner = CliRunner()
     with runner.isolated_filesystem():
         problem_path = Path("lorem-ipsum")
@@ -46,7 +46,7 @@ points = 25
             assert data["tests"][0]["name"] == "lorem-ipsum - cast some spells"
 
 
-def test_summary_command():
+def test_summary_command() -> None:
     runner = CliRunner()
 
     # When there is no problem,

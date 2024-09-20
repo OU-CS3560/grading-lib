@@ -17,12 +17,12 @@ def an_empty_folder():
     temp_dir.cleanup()
 
 
-def test_Repository_init_with_an_empty_folder(an_empty_folder):
+def test_Repository_init_with_an_empty_folder(an_empty_folder) -> None:
     repo = Repository(an_empty_folder.name)
     assert isinstance(repo.working_tree_dir, Path)
 
 
-def test_Repository_create_and_add_random_file(an_empty_folder):
+def test_Repository_create_and_add_random_file(an_empty_folder) -> None:
     repo = Repository(an_empty_folder.name)
     assert isinstance(repo.working_tree_dir, Path)
 

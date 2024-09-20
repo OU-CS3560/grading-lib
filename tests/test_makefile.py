@@ -4,7 +4,7 @@ from grading_lib.makefile import Makefile
 
 
 @pytest.fixture
-def makefile_1():
+def makefile_1() -> str:
     """
     First line is empty and two equal signs on a var-def line.
     """
@@ -18,7 +18,7 @@ EXPAND_NOW :::= value
 
 
 @pytest.fixture
-def makefile_2():
+def makefile_2() -> str:
     return """
 # https://www.gnu.org/software/make/manual/html_node/Phony-Targets.html
 
@@ -40,7 +40,7 @@ Date:
 
 
 @pytest.fixture
-def makefile_3():
+def makefile_3() -> str:
     """Continuous Makefile."""
     return """
 a: e f
@@ -52,7 +52,7 @@ d: i j
 
 
 @pytest.fixture
-def makefile_var_defs():
+def makefile_var_defs() -> str:
     """
     Various variable definitions.
     """
@@ -74,7 +74,7 @@ override TEXT_VAR = new-val
 """
 
 
-def test_makefile_from_text(makefile_1):
+def test_makefile_from_text(makefile_1: str) -> None:
     """
     A verification test for `:` showing up twice.
     """
@@ -85,7 +85,7 @@ def test_makefile_from_text(makefile_1):
         pytest.fail("Exception raises while parsing a makefile.")
 
 
-def test_makefile_from_text_2(makefile_2):
+def test_makefile_from_text_2(makefile_2) -> None:
     try:
         mk = Makefile.from_text(makefile_2)
     except Exception:
@@ -95,27 +95,39 @@ def test_makefile_from_text_2(makefile_2):
     assert not mk.rules[1].is_empty()
 
 
-def test_makefile_from_text_3(makefile_3):
+def test_makefile_from_text_3(makefile_3) -> None:
     try:
         mk = Makefile.from_text(makefile_3)
     except Exception:
         pytest.fail("Exception raises while parsing a makefile.")
 
     assert mk.has_rule("a")
-    assert mk.get_rule("a").prerequisites == ["e", "f"]
+    rule = mk.get_rule("a")
+    assert rule is not None
+    if rule:
+        assert rule.prerequisites == ["e", "f"]
 
     assert mk.has_rule("b")
-    assert mk.get_rule("b").prerequisites == ["g"]
+    rule = mk.get_rule("b")
+    assert rule is not None
+    if rule:
+        assert rule.prerequisites == ["g"]
 
     assert mk.has_rule("c")
-    assert mk.get_rule("c").prerequisites == ["h"]
-    assert not mk.get_rule("c").is_empty()
+    rule = mk.get_rule("c")
+    assert rule is not None
+    if rule:
+        assert rule.prerequisites == ["h"]
+        assert not rule.is_empty()
 
     assert mk.has_rule("d")
-    assert mk.get_rule("d").prerequisites == ["i", "j"]
+    rule = mk.get_rule("d")
+    assert rule is not None
+    if rule:
+        assert rule.prerequisites == ["i", "j"]
 
 
-def test_makefile_var_defs_parsing(makefile_var_defs):
+def test_makefile_var_defs_parsing(makefile_var_defs) -> None:
     try:
         _ = Makefile.from_text(makefile_var_defs)
     except Exception:

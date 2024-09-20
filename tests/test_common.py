@@ -16,22 +16,22 @@ from grading_lib.common import (
 )
 
 
-def test_is_debug_mode():
+def test_is_debug_mode() -> None:
     vals_for_true = ["1", "True", "T", "On", "ON", "t", "true"]
     for val in vals_for_true:
         os.environ["test_DEBUG"] = val
         assert is_debug_mode("test_DEBUG")
 
     vals_for_false = ["", None, "False", "false", "lorem", "0"]
-    for val in vals_for_false:
-        if val is None:
+    for v in vals_for_false:
+        if v is None:
             del os.environ["test_DEBUG"]
         else:
-            os.environ["test_DEBUG"] = val
+            os.environ["test_DEBUG"] = v
         assert is_debug_mode("test_DEBUG") is False
 
 
-def test_get_seed_from_env():
+def test_get_seed_from_env() -> None:
     """
     If value is set, should properly parse and use it.
 
@@ -39,12 +39,12 @@ def test_get_seed_from_env():
     for multiple tests). Does not currently check if the return value is
     the scaled time.
     """
-    val = 123
-    os.environ["test_SEED"] = str(val)
-    assert get_seed_from_env("test_SEED") == val
+    val1 = 123
+    os.environ["test_SEED"] = str(val1)
+    assert get_seed_from_env("test_SEED") == val1
 
-    val = "123not-a-number"
-    os.environ["test_SEED"] = str(val)
+    val2 = "123not-a-number"
+    os.environ["test_SEED"] = str(val2)
     res = get_seed_from_env("test_SEED")
     assert isinstance(res, int)
     assert res != 0
@@ -58,7 +58,7 @@ def a_temp_file():
     f.close()
 
 
-def test_has_file_changed(a_temp_file):
+def test_has_file_changed(a_temp_file) -> None:
     path = Path(a_temp_file.name)
 
     # Take snapshot of the mtime.
@@ -75,7 +75,7 @@ def test_has_file_changed(a_temp_file):
     assert not has_file_changed(last_known_mtime, path)
 
 
-def test_populate_folder_with_filenames():
+def test_populate_folder_with_filenames() -> None:
     with tempfile.TemporaryDirectory() as tmpdir:
         tmpdir_path = Path(tmpdir)
 
@@ -98,13 +98,13 @@ def test_populate_folder_with_filenames():
         assert result_names == expected_files
 
 
-def test_run_executable():
+def test_run_executable() -> None:
     cmd_result = run_executable(["git", "version"])
     assert cmd_result.success
     assert "git version" in cmd_result.output
 
 
-def test_BaseTestCase():
+def test_BaseTestCase() -> None:
     """Tests for the BaseTestCase."""
 
     # When with_temporary_dir is not specified,
@@ -126,7 +126,7 @@ def test_BaseTestCase():
         instance.tearDown()
 
 
-def test_BaseTestCase_assertArchiveFileIsGzip():
+def test_BaseTestCase_assertArchiveFileIsGzip() -> None:
     class ChildClsWithTempDir(BaseTestCase):
         with_temporary_dir = True
 
@@ -134,8 +134,8 @@ def test_BaseTestCase_assertArchiveFileIsGzip():
     instance.setUp()
 
     try:
-        with tempfile.TemporaryFile() as tmp_file:
+        with tempfile.NamedTemporaryFile() as tmp_file:
             with pytest.raises(AssertionError):
-                instance.assertArchiveFileIsGzip(tmp_file)
+                instance.assertArchiveFileIsGzip(tmp_file.name)
     finally:
         instance.tearDown()
