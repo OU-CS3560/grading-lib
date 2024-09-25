@@ -1,6 +1,25 @@
 <!-- This file is included in the documentation so the header is removed. -->
 
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://packaging.python.org/en/latest/discussions/versioning/).
+
+Note that the log for version before v0.1.1 may not be in the mentioned format.
+
 ## Unreleased
+
+### Added
+
+- Add `common.points` for decorating the test method for points.
+- Add `common.file_has_correct_sha512_checksum` for checking file checksum.
+- Add `common.MinimalistTestRunner` that show collected points at the end.
+- Add `repository.RepositoryBaseTestCase.assertHasOnlyGitCommand` that check if file contain only Git command and nothing else.
+
+## Changed
+
+- `common.MinimalistTestResult` now track points if they are presence.
+- Some test cases now use the builtin `tmp_path` instead of our own version of it.
 
 ## v0.1.1rc2
 

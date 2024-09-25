@@ -44,7 +44,12 @@ class Repository:
     :raise ValueError: When the repository does not have a working tree directory.
     """
 
-    def __init__(self, path: str | Path, *args, **kwargs) -> None:
+    def __init__(
+        self: Self,
+        path: str | Path,
+        *args,
+        **kwargs,
+    ) -> None:
         self.repo: Repo
         self.temp_dir: tempfile.TemporaryDirectory[str] | None = None
 
@@ -198,6 +203,21 @@ class Repository:
 
 
 class RepositoryBaseTestCase(BaseTestCase):
+    def assertHasOnlyGitCommand(
+        self,
+        path: Path,
+        msg_template="{path!s} appears to have non git command(s). Please comment out unrelated commands.",
+    ) -> None:
+        with open(path) as f:
+            lines = f.readlines()
+            for raw_line in lines:
+                line = raw_line.strip()
+                if len(line) == 0 or line[0] == "#":
+                    continue
+
+                if not line.startswith("git"):
+                    self.fail(msg_template.format(path=path))
+
     def assertHasTagWithNameAt(
         self, repo: Repository, name: str, commit_hash: str
     ) -> None:
@@ -208,7 +228,7 @@ class RepositoryBaseTestCase(BaseTestCase):
                 return
 
         tags_text = "\n".join(tag_ref.path for tag_ref in tag_refs)
-        raise self.failureException(
+        self.fail(
             f"Expect to see a tag '{name}' at commit '{commit_hash}', but found none. Tags at commit {commit_hash}:\n{tags_text}"
         )
 
@@ -234,6 +254,6 @@ class RepositoryBaseTestCase(BaseTestCase):
                 text = f"{tag_ref.path}: {tag_ref.tag.message}"
             tags_texts.append(text)
         tags_text = "\n".join(tags_texts)
-        raise self.failureException(
+        self.fail(
             f"Expect to see a tag '{name}' with message '{message}' at commit '{commit_hash}', but found none. Tags at commit {commit_hash}:\n{tags_text}"
         )

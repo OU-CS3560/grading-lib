@@ -55,6 +55,7 @@ select = [
     "RUF", # ruff-specific rules
     "UP",  # pyupgrade
     "W",   # pycodestyle warning
+    "T10", # flake8-debugger e.g. breakpoint() is presence
 ]
 ignore = [
     "E501"  # Line too long

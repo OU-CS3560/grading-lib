@@ -1,21 +1,47 @@
 import datetime
+import hashlib
 import os
 import subprocess
 import sys
 import tempfile
 import time
+import typing as ty
 import unittest
 from collections import namedtuple
 from pathlib import Path
 from typing import Any, TypeVar
 
 T = TypeVar("T")
+P = ty.ParamSpec("P")
 
 COMMAND_FAILED_TEXT_TEMPLATE = "An error occurred while trying to run a command '{command}'. The command's output is\n\n{output}"
 FILE_NOT_EXIST_TEXT_TEMPLATE = "File '{path}' does not exist"
 DEFAULT_FILENAME_POOL = ["main.cpp", "file.txt"]
 FILE_SUFFIX_POOL = [".cpp", ".txt", ".md", ".zip", ".py", ".toml", ".yml", ".yaml"]
 NAME_POOL = ["herta", "cat", "dog", "dolphin", "falcon", "dandilion", "fox", "jett"]
+
+
+def points(value: float) -> ty.Callable[P, T]:
+    """Assign points to the test case."""
+
+    def decorator(test_item: T) -> T:
+        test_item.__gradinglib_points = value
+        return test_item
+
+    return decorator
+
+
+def file_has_correct_sha512_checksum(expected_checksum: str, file_path: Path) -> bool:
+    """Return True if the file has the same SHA512 checksum."""
+
+    with open(file_path, "rb") as f:
+        data = f.read()
+        m = hashlib.sha512()
+        m.update(data)
+        checksum = m.hexdigest()
+        return checksum == expected_checksum
+
+    return False
 
 
 def is_debug_mode(
@@ -120,12 +146,28 @@ class MinimalistTestResult(unittest.TextTestResult):
         super().__init__(*args, **kwargs)
         self.dots = False
 
+        # Points tracking.
+        self.points = 0.0
+        self.total_points = 0.0
+
     def getDescription(self, test: unittest.TestCase) -> str:
         doc_first_line = test.shortDescription()
         if self.descriptions and doc_first_line:
             return doc_first_line
         else:
             return str(test)
+
+    def startTest(self, test):
+        super().startTest(test)
+        test_method = getattr(test, test._testMethodName)
+        if hasattr(test_method, "__gradinglib_points"):
+            self.total_points += getattr(test_method, "__gradinglib_points")
+
+    def addSuccess(self, test):
+        super().addSuccess(test)
+        test_method = getattr(test, test._testMethodName)
+        if hasattr(test_method, "__gradinglib_points"):
+            self.points += getattr(test_method, "__gradinglib_points")
 
     def addFailure(self, test: unittest.TestCase, err) -> None:
         self.failures.append((test, str(err[1]) + "\n"))
@@ -136,6 +178,14 @@ class MinimalistTestResult(unittest.TextTestResult):
         elif self.dots:
             self.stream.write("F")
             self.stream.flush()
+
+
+class MinimalistTestRunner(unittest.TextTestRunner):
+    def run(self, test):
+        result = super().run(test)
+        self.stream.writeln(f"POINTS: {result.points} / {result.total_points}")
+        self.stream.flush()
+        return result
 
 
 class BaseTestCaseMeta(type):

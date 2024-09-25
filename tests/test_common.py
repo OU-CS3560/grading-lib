@@ -1,5 +1,4 @@
 import os
-import tempfile
 import time
 from pathlib import Path
 
@@ -8,6 +7,7 @@ import pytest
 from grading_lib import is_debug_mode
 from grading_lib.common import (
     BaseTestCase,
+    file_has_correct_sha512_checksum,
     get_mtime_as_datetime,
     get_seed_from_env,
     has_file_changed,
@@ -50,52 +50,41 @@ def test_get_seed_from_env() -> None:
     assert res != 0
 
 
-@pytest.fixture
-def a_temp_file():
-    f = tempfile.NamedTemporaryFile()
-    f.seek(0)
-    yield f
-    f.close()
-
-
-def test_has_file_changed(a_temp_file) -> None:
-    path = Path(a_temp_file.name)
+def test_has_file_changed(tmp_path) -> None:
+    temp_file = tmp_path / "README.md"
+    temp_file.write_text("Hello World!")
 
     # Take snapshot of the mtime.
-    last_known_mtime = get_mtime_as_datetime(path)
-    assert not has_file_changed(last_known_mtime, path)
+    last_known_mtime = get_mtime_as_datetime(temp_file)
+    assert not has_file_changed(last_known_mtime, temp_file)
 
     # Modify the mtime and test.
     time.sleep(1.2)
-    path.touch()
-    assert has_file_changed(last_known_mtime, path)
+    temp_file.touch()
+    assert has_file_changed(last_known_mtime, temp_file)
 
     # Take another snapshot.
-    last_known_mtime = get_mtime_as_datetime(str(path))
-    assert not has_file_changed(last_known_mtime, path)
+    last_known_mtime = get_mtime_as_datetime(str(temp_file))
+    assert not has_file_changed(last_known_mtime, temp_file)
 
 
-def test_populate_folder_with_filenames() -> None:
-    with tempfile.TemporaryDirectory() as tmpdir:
-        tmpdir_path = Path(tmpdir)
+def test_populate_folder_with_filenames(tmp_path) -> None:
+    expected_files = ["a", "b", "c"]
+    populate_folder_with_filenames(tmp_path, expected_files)
 
-        with pytest.raises(ValueError):
-            (tmpdir_path / "a.txt").touch()
-            populate_folder_with_filenames(tmpdir_path / "a.txt", ["a", "b", "c"])
+    # Order should not matter, we just want check that all files are created.
+    result_names = sorted([item.name for item in tmp_path.iterdir()])
 
-        with pytest.raises(ValueError):
-            populate_folder_with_filenames(tmpdir_path / "src", ["a", "b", "c"])
+    assert result_names == expected_files
 
-    with tempfile.TemporaryDirectory() as tmpdir:
-        tmpdir_path = Path(tmpdir)
 
-        expected_files = ["a", "b", "c"]
-        populate_folder_with_filenames(tmpdir, expected_files)
+def test_populate_folder_with_filenames_error_handling(tmp_path) -> None:
+    with pytest.raises(ValueError):
+        (tmp_path / "a.txt").touch()
+        populate_folder_with_filenames(tmp_path / "a.txt", ["a", "b", "c"])
 
-        # Order should not matter, we just want check that all files are created.
-        result_names = sorted([item.name for item in tmpdir_path.iterdir()])
-
-        assert result_names == expected_files
+    with pytest.raises(ValueError):
+        populate_folder_with_filenames(tmp_path / "src", ["a", "b", "c"])
 
 
 def test_run_executable() -> None:
@@ -126,7 +115,7 @@ def test_BaseTestCase() -> None:
         instance.tearDown()
 
 
-def test_BaseTestCase_assertArchiveFileIsGzip() -> None:
+def test_BaseTestCase_assertArchiveFileIsGzip(tmp_path) -> None:
     class ChildClsWithTempDir(BaseTestCase):
         with_temporary_dir = True
 
@@ -134,8 +123,22 @@ def test_BaseTestCase_assertArchiveFileIsGzip() -> None:
     instance.setUp()
 
     try:
-        with tempfile.NamedTemporaryFile() as tmp_file:
-            with pytest.raises(AssertionError):
-                instance.assertArchiveFileIsGzip(tmp_file.name)
+        tmp_file = tmp_path / "sdist.tar.gz"
+        tmp_file.write_bytes(b"\x1f\x65")
+        with pytest.raises(AssertionError):
+            instance.assertArchiveFileIsGzip(str(tmp_file))
     finally:
         instance.tearDown()
+
+
+def test_file_has_correct_sha512_checksum(tmp_path):
+    file_path = tmp_path / "repo.tar.gz"
+    with open(file_path, "wb") as f:
+        f.write(
+            b";fb\xc80^\xd1u*p\x00\xf50\xd1\xc1\x17\xb6\xec\x13\xb6\x1fd\xd5\xe2\xe1\xa0\xc4\xe5a\x0f"
+        )
+
+    assert file_has_correct_sha512_checksum(
+        "f58345b442700529c9f488df0eb76b805bd26fc347b83f9ff5aead0e06fee6b7fc480a556578be9a202813da0c322b48c5004a9c764f1f6b051a6467827338c8",
+        file_path,
+    )

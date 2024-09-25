@@ -44,7 +44,7 @@ Run the test for various python's versions, run
 tox
 ```
 
-## Running test coverage
+With test coverage
 
 ```console
 pytest --cov=grading_lib tests/

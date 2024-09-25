@@ -10,7 +10,7 @@ from typing_extensions import Self
 def import_as_non_testcase(
     module_name: str, name: str, package: str | None = None
 ) -> ty.Any:
-    """Import the name from a module and prevent pytest from running it as testcase."""
+    """Import the name from a module and prevent pytest from running it as a testcase."""
     mod = import_module(module_name, package=package)
     cls = mod.__dict__[name]
     cls.__test__ = False
