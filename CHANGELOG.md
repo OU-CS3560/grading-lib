@@ -9,7 +9,11 @@ Note that the log for version before v0.1.1 may not be in the mentioned format.
 
 ## [Unreleased]
 
-## v0.1.1rc3
+## v0.1.1 - 2024-09-25
+
+Please see changelog from v0.1.1a1 to v0.1.1rc3.
+
+## v0.1.1rc3 - 2024-09-25
 
 ### Added
 
@@ -18,7 +22,7 @@ Note that the log for version before v0.1.1 may not be in the mentioned format.
 - Add `common.MinimalistTestRunner` that show collected points at the end.
 - Add `repository.RepositoryBaseTestCase.assertHasOnlyGitCommand` that check if file contain only Git command and nothing else.
 
-## Changed
+### Changed
 
 - `common.MinimalistTestResult` now track points if they are presence.
 - Some test cases now use the builtin `tmp_path` instead of our own version of it.

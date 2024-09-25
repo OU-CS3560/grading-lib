@@ -2,7 +2,7 @@
 
 ## Note
 
-For the detail about version specifier, please see [version specifier](https://packaging.python.org/en/latest/specifications/version-specifiers/)
+- GitHub Codespace now use Python 3.12. However, our school machines still have 3.10.
 
 ## First time setup
 
