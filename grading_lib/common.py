@@ -157,13 +157,13 @@ class MinimalistTestResult(unittest.TextTestResult):
         else:
             return str(test)
 
-    def startTest(self, test):
+    def startTest(self, test: unittest.TestCase):
         super().startTest(test)
         test_method = getattr(test, test._testMethodName)
         if hasattr(test_method, "__gradinglib_points"):
             self.total_points += getattr(test_method, "__gradinglib_points")
 
-    def addSuccess(self, test):
+    def addSuccess(self, test: unittest.TestCase):
         super().addSuccess(test)
         test_method = getattr(test, test._testMethodName)
         if hasattr(test_method, "__gradinglib_points"):
@@ -174,6 +174,7 @@ class MinimalistTestResult(unittest.TextTestResult):
         self._mirrorOutput = True
 
         if self.showAll:
+            # FIXME: This ._write_status does not exist in 3.10.
             self._write_status(test, "FAIL")
         elif self.dots:
             self.stream.write("F")
@@ -181,7 +182,7 @@ class MinimalistTestResult(unittest.TextTestResult):
 
 
 class MinimalistTestRunner(unittest.TextTestRunner):
-    def run(self, test):
+    def run(self, test: unittest.TestSuite | unittest.TestCase) -> unittest.TestResult:
         result = super().run(test)
         self.stream.writeln(f"POINTS: {result.points} / {result.total_points}")
         self.stream.flush()

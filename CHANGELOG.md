@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://packaging.python.org/e
 
 Note that the log for version before v0.1.1 may not be in the mentioned format.
 
-## Unreleased
+## [Unreleased]
+
+## v0.1.1rc3
 
 ### Added
 
