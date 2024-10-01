@@ -5,12 +5,12 @@ import pytest
 from grading_lib.repository import Repository, RepositoryBaseTestCase
 
 
-def test_Repository_init_with_an_empty_folder(tmp_path: pytest.Fixture) -> None:
+def test_Repository_init_with_an_empty_folder(tmp_path) -> None:
     repo = Repository(tmp_path)
     assert isinstance(repo.working_tree_dir, Path)
 
 
-def test_Repository_create_and_add_random_file(tmp_path: pytest.Fixture) -> None:
+def test_Repository_create_and_add_random_file(tmp_path) -> None:
     repo = Repository(tmp_path)
     assert isinstance(repo.working_tree_dir, Path)
 
@@ -22,7 +22,7 @@ def test_Repository_create_and_add_random_file(tmp_path: pytest.Fixture) -> None
     assert len(repo.repo.index.entries) == 2
 
 
-def test_RepositoryBaseTestCase_assertHasOnlyGitCommand(tmp_path: pytest.Fixture) -> None:
+def test_RepositoryBaseTestCase_assertHasOnlyGitCommand(tmp_path) -> None:
     class Child(RepositoryBaseTestCase):
         pass
 
