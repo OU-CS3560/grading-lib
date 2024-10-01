@@ -21,6 +21,7 @@ dependencies = [
     "click",
     "tomli",
     "GitPython",
+    "mistletoe",
     "typing_extensions >=4.12, <5",
     'importlib-metadata; python_version>="3.10"',
 ]

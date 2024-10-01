@@ -1,8 +1,14 @@
+import copy
+import importlib
+import os
+import sys
+import unittest
 from pathlib import Path
 
 import click
 
-from ..util import get_problem_total_points, load_problems_metadata
+from ..common import MinimalistTestResult, MinimalistTestRunner
+from ..util import FindProblemList, get_problem_total_points, load_problems_metadata
 from .dev import dev
 from .internal import internal
 
@@ -69,6 +75,62 @@ def rebase_todo_injector_command(todo_items_file_path: str, path: str) -> None:
 
         with open(path, "w") as out_f:
             out_f.write(todo_items_content)
+
+
+@cli.command(name="grade")
+@click.argument("path", default=".", type=click.Path(exists=True))
+def grade_command(path: str | Path) -> None:
+    """Grade problems at path"""
+    # Steps:
+    # 1. Using mistletoe, parse the README.md in the path for the problem order.
+    #    By extracting the list after the inline code token with `:problem-list:` on a heading token.
+    # 2. Prepare the tests to execute in that order. Remove or skip the test where the students did not change the content of the target file.
+    if isinstance(path, str):
+        path = Path(path)
+    problem_names = FindProblemList.from_file(path / "README.md")
+
+    if len(problem_names) == 0:
+        print("No problem found.")
+
+    current_directory = os.getcwd()
+    current_sys_path = copy.copy(sys.path)
+    test_programs = []
+    for idx, problem_name in enumerate(problem_names, start=1):
+        print(f"{idx} - Grading {problem_name} ")
+
+        try:
+            os.chdir(problem_name)
+
+            # Prepare sys.path for module import.
+            sys.path.append(os.getcwd())
+            importlib.invalidate_caches()
+            mod = importlib.import_module("scripts.grade")
+
+            runner = MinimalistTestRunner(resultclass=MinimalistTestResult)
+            test_program = unittest.main(
+                mod, testRunner=runner, argv=[sys.argv[0]], exit=False
+            )
+            test_programs.append((problem_name, test_program))
+        finally:
+            os.chdir(current_directory)
+            # Without copy, sys.path will be a ref to current_sys_path.
+            sys.path = copy.copy(current_sys_path)
+            if "scripts.grade" in sys.modules.keys():
+                # This will be re-used by Python since we have the same module name in
+                # every problem.
+                del sys.modules["scripts.grade"]
+
+        print("\n\n")
+
+    # Summary.
+    print("==== Summary ====")
+    total_points = sum([test_program.result.total_points for _, test_program in test_programs])
+    student_total_points = 0.0
+    for idx, item in enumerate(test_programs, start=1):
+        problem_name, test_program = item
+        print(f"{idx:>3} - {problem_name:<30}{test_program.result.points:>5} / {test_program.result.total_points:>5}")
+        student_total_points += test_program.result.points
+    print(f"Total: {student_total_points:>5} / {total_points:>5}")
 
 
 cli.add_command(dev)

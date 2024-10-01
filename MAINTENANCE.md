@@ -67,12 +67,14 @@ make html
 
 ## Deployment flow
 
+- Check that unit testing on Windows and MacOs do not fail.
+
 - Run tox.
 - Update `grading_lib/VERSION` file.
 - Update `CHANGELOG.md` file.
-- Make a commit
-- Tag the commit
-- Push
+- Make a commit.
+- Tag the commit.
+- Push to GitHub.
 - Approve the deployment flow on GitHub Actions.
 
 ### Manually publish to PyPI

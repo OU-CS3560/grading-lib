@@ -9,6 +9,17 @@ Note that the log for version before v0.1.1 may not be in the mentioned format.
 
 ## [Unreleased]
 
+## v0.1.2a1 - 2024-10-01
+
+### Added
+
+- Add `grade` command that runs all test in the homework.
+- Add `util.FindProblemList` that parse a README.md file for `:problem-list:` token and the list of problem names.
+
+### Changed
+
+- Fix some mypy error messages for function's return type and argument type.
+
 ## v0.1.1 - 2024-09-25
 
 Please see changelog from v0.1.1a1 to v0.1.1rc3.
