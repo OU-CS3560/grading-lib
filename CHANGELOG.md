@@ -9,6 +9,12 @@ Note that the log for version before v0.1.1 may not be in the mentioned format.
 
 ## [Unreleased]
 
+## v0.1.2a3 - 2024-10-01
+
+### Changed
+
+- Add non-zero exit code when the points is less than the total points.
+
 ## v0.1.2a2 - 2024-10-01
 
 ### Changed

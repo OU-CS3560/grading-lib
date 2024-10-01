@@ -133,6 +133,9 @@ def grade_command(path: str | Path) -> None:
         student_total_points += test_program.result.points
     print(f"Total: {student_total_points:>5} / {total_points:>5}")
 
+    if student_total_points < total_points:
+        sys.exit(1)
+
 
 cli.add_command(dev)
 cli.add_command(internal)
