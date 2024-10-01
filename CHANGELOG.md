@@ -9,6 +9,12 @@ Note that the log for version before v0.1.1 may not be in the mentioned format.
 
 ## [Unreleased]
 
+## v0.1.2a2 - 2024-10-01
+
+### Changed
+
+- Flush stdout in the grade command.
+
 ## v0.1.2a1 - 2024-10-01
 
 ### Added

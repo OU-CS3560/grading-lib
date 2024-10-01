@@ -8,7 +8,8 @@ from pathlib import Path
 import click
 
 from ..common import MinimalistTestResult, MinimalistTestRunner
-from ..util import FindProblemList, get_problem_total_points, load_problems_metadata
+from ..util import (FindProblemList, get_problem_total_points,
+                    load_problems_metadata)
 from .dev import dev
 from .internal import internal
 
@@ -96,7 +97,7 @@ def grade_command(path: str | Path) -> None:
     current_sys_path = copy.copy(sys.path)
     test_programs = []
     for idx, problem_name in enumerate(problem_names, start=1):
-        print(f"{idx} - Grading {problem_name} ")
+        print(f"{idx} - Grading {problem_name} ", flush=True)
 
         try:
             os.chdir(problem_name)
@@ -120,7 +121,7 @@ def grade_command(path: str | Path) -> None:
                 # every problem.
                 del sys.modules["scripts.grade"]
 
-        print("\n\n")
+        print("\n\n", flush=True)
 
     # Summary.
     print("==== Summary ====")
