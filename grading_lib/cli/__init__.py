@@ -8,8 +8,7 @@ from pathlib import Path
 import click
 
 from ..common import MinimalistTestResult, MinimalistTestRunner
-from ..util import (FindProblemList, get_problem_total_points,
-                    load_problems_metadata)
+from ..util import FindProblemList, get_problem_total_points, load_problems_metadata
 from .dev import dev
 from .internal import internal
 
@@ -107,7 +106,7 @@ def grade_command(path: str | Path) -> None:
             importlib.invalidate_caches()
             mod = importlib.import_module("scripts.grade")
 
-            runner = MinimalistTestRunner(resultclass=MinimalistTestResult)
+            runner = MinimalistTestRunner(stream=sys.stdout, resultclass=MinimalistTestResult)
             test_program = unittest.main(
                 mod, testRunner=runner, argv=[sys.argv[0]], exit=False
             )
