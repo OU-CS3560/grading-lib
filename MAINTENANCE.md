@@ -2,7 +2,10 @@
 
 ## Note
 
-- GitHub Codespace now use Python 3.12. However, our school machines still have 3.10.
+### Why are we supporting Python 3.10 to 3.13?
+
+Our lab machines still using Python 3.10.x. GitHub Codespace should still be using Python 3.12.x.
+Student who want to run the grading script locally may download 3.13 from python.org website.
 
 ## First time setup
 
