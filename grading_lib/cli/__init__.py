@@ -48,7 +48,7 @@ def summary_command() -> None:
 @cli.command(name="rebase-todo-injector")
 @click.argument("todo_items_file_path")
 @click.argument("path")
-def rebase_todo_injector_command(todo_items_file_path: str, path: str) -> None:
+def rebase_todo_injector_command(todo_items_file_path: str | Path, path: str) -> None:
     """
     An 'editor' that inject pre-made todo items for git interactive rebase.
 
@@ -63,7 +63,8 @@ def rebase_todo_injector_command(todo_items_file_path: str, path: str) -> None:
     SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
     python -m grading_lib rebase-todo-injector $SCRIPT_DIR/../rebase-todo-items.txt $1
     """
-    todo_items_file_path = Path(todo_items_file_path)
+    if isinstance(todo_items_file_path, str):
+        todo_items_file_path = Path(todo_items_file_path)
     if not todo_items_file_path.exists():
         # formatter does not correctly format this expression if use in f-string.
         cwd = Path(".").absolute()
@@ -106,7 +107,9 @@ def grade_command(path: str | Path) -> None:
             importlib.invalidate_caches()
             mod = importlib.import_module("scripts.grade")
 
-            runner = MinimalistTestRunner(stream=sys.stdout, resultclass=MinimalistTestResult)
+            runner = MinimalistTestRunner(
+                stream=sys.stdout, resultclass=MinimalistTestResult
+            )
             test_program = unittest.main(
                 mod, testRunner=runner, argv=[sys.argv[0]], exit=False
             )

@@ -9,10 +9,8 @@ import typing as ty
 import unittest
 from collections import namedtuple
 from pathlib import Path
-from typing import Any, TypeVar
 
-T = TypeVar("T")
-P = ty.ParamSpec("P")
+T = ty.TypeVar("T")
 
 COMMAND_FAILED_TEXT_TEMPLATE = "An error occurred while trying to run a command '{command}'. The command's output is\n\n{output}"
 FILE_NOT_EXIST_TEXT_TEMPLATE = "File '{path}' does not exist"
@@ -21,11 +19,11 @@ FILE_SUFFIX_POOL = [".cpp", ".txt", ".md", ".zip", ".py", ".toml", ".yml", ".yam
 NAME_POOL = ["herta", "cat", "dog", "dolphin", "falcon", "dandilion", "fox", "jett"]
 
 
-def points(value: float) -> ty.Callable[P, T]:
+def points(value: float) -> ty.Callable[[T], T]:
     """Assign points to the test case."""
 
     def decorator(test_item: T) -> T:
-        test_item.__gradinglib_points = value
+        test_item.__gradinglib_points = value  # type: ignore[attr-defined]
         return test_item
 
     return decorator
@@ -190,7 +188,7 @@ class MinimalistTestRunner(unittest.TextTestRunner):
 
 
 class BaseTestCaseMeta(type):
-    def __new__(cls: T, name: str, bases: list[Any], attrs: dict[str, Any]) -> T:
+    def __new__(cls: T, name: str, bases: list[ty.Any], attrs: dict[str, ty.Any]) -> T:
         if "with_temporary_dir" not in attrs:
             attrs["with_temporary_dir"] = False
 

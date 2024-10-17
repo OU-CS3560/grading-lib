@@ -131,7 +131,7 @@ def test_BaseTestCase_assertArchiveFileIsGzip(tmp_path) -> None:
         instance.tearDown()
 
 
-def test_file_has_correct_sha512_checksum(tmp_path):
+def test_file_has_correct_sha512_checksum(tmp_path) -> None:
     file_path = tmp_path / "repo.tar.gz"
     with open(file_path, "wb") as f:
         f.write(

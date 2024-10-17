@@ -140,7 +140,9 @@ class Repository:
         """
         Run a command using repository's working directory as cwd.
         """
-        return run_executable(args, cwd=self.repo.working_tree_dir, timeout=timeout)
+        return run_executable(
+            args, cwd=str(self.repo.working_tree_dir), timeout=timeout
+        )
 
     def create_and_add_random_file(
         self, name: str | None = None, content: str | None = None
@@ -198,15 +200,16 @@ class Repository:
         """
         Run 'git log --oneline --all --graph --decorate' and returns the output.
         """
+        # .log is handled by __getattr__ whcih returns Any.
         res = self.repo.git.log("--graph", "--all", "--decorate", "--oneline")
-        return res
+        return res  # type: ignore[no-any-return]
 
 
 class RepositoryBaseTestCase(BaseTestCase):
     def assertHasOnlyGitCommand(
         self,
         path: Path,
-        msg_template="{path!s} appears to have non git command(s). Please comment out unrelated commands.",
+        msg_template: str = "{path!s} appears to have non git command(s). Please comment out unrelated commands.",
     ) -> None:
         with open(path) as f:
             lines = f.readlines()

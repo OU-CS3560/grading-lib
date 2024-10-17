@@ -42,10 +42,10 @@ class FindProblemList:
     with
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.after_problem_list_marker = False
         self.in_a_list = False
-        self.problem_names = []
+        self.problem_names: list[str] = []
 
     @classmethod
     def from_file(cls, file_path: Path) -> list[str]:
