@@ -15,6 +15,7 @@ Note that the log for version before v0.1.1 may not be in the mentioned format.
 
 - Force `sys.stdout` for `MinimalistTestRunner.stream` to prevent stdout and stderr weaving output on GitHub Actions.
 - Fix typos.
+- Deprecate `internal collect-autograding-tests` command.
 
 ### Removed 
 

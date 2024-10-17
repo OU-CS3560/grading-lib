@@ -138,7 +138,7 @@ class Repository:
 
     def run_executable(self, args: list[str], timeout: float = 15.0) -> CommandResult:
         """
-        Run a command using repostiory's working directory as cwd.
+        Run a command using repository's working directory as cwd.
         """
         return run_executable(args, cwd=self.repo.working_tree_dir, timeout=timeout)
 

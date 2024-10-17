@@ -16,7 +16,7 @@ def internal() -> None:
     pass
 
 
-@internal.command(name="collect-autograding-tests")
+@internal.command(name="collect-autograding-tests", deprecated=True)
 @click.argument("src_dir", required=False, default=".")
 @click.option("--out-dir", default=Path(".") / ".github" / "classroom")
 @click.pass_context
@@ -25,6 +25,8 @@ def collect_autograding_tests_command(
 ) -> None:
     """
     Collect all test cases and put them in .github/classroom/autograding.json.
+
+    DEPRECATED because education/autograding is deprecated (https://github.com/github-education-resources/autograding).
 
     This is meant to be used by the GitHub Action's workflow.
     """
