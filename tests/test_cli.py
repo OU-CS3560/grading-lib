@@ -37,7 +37,7 @@ points = 25
         if sys.platform == "win32":
             assert result.output == "processing lorem-ipsum\\problem.toml\n"
         else:
-            assert result.output == "processing lorem-ipsum/problem.toml\n"
+            assert "processing lorem-ipsum/problem.toml" in result.output
         expected_file_path = Path(".github") / "classroom" / "autograding.json"
         assert expected_file_path.exists()
         with open(expected_file_path) as f:

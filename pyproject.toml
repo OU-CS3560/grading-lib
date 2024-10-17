@@ -5,13 +5,14 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "cs3560-grading-lib"
 requires-python = ">=3.10"
-description = "A common library for the grading scripts."
+description = "A common library for the grading scripts of CS3560."
 readme = "README.md"
 license = { file = "LICENSE" }
 dynamic = ["version"]
+# For the lis of classifiers, please visit https://pypi.org/classifiers/
 classifiers = [
     "Programming Language :: Python :: 3.10",
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Education",
     "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
@@ -27,7 +28,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "pytest-cov", "mypy", "ruff", "tox"]
+dev = ["build", "twine", "pytest", "pytest-cov", "mypy", "ruff", "tox"]
 
 [project.urls]
 Documentation = "https://grading-lib.readthedocs.io/en/latest/"
@@ -35,8 +36,8 @@ Documentation = "https://grading-lib.readthedocs.io/en/latest/"
 "Issue Tracker" = "https://github.com/OU-CS3560/cs3560-grading-lib/issues"
 Changelog = "https://github.com/OU-CS3560/cs3560-grading-lib/blob/main/CHANGELOG.md"
 
-[tool.setuptools]
-packages = ["grading_lib", "grading_lib.tools", "grading_lib.cli"]
+[tool.setuptools.packages.find]
+include = ["cs3560cli*"]
 
 [tool.setuptools.dynamic]
 version = { file = "grading_lib/VERSION" }

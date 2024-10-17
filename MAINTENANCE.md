@@ -7,11 +7,15 @@
 Our lab machines still using Python 3.10.x. GitHub Codespace should still be using Python 3.12.x.
 Student who want to run the grading script locally may download 3.13 from python.org website.
 
-## First time setup
+## First Time Setup
 
-TBD
+Install the pinned dependencies.
 
-## Building the package
+```console
+python -m pip install -r dev-requirements.txt
+```
+
+## Building the Package
 
 Install the build-time dependencies.
 
@@ -25,7 +29,7 @@ To build, run
 python -m build
 ```
 
-## Installing the editable version
+## Installing the Editable Version
 
 To locally install, run
 
@@ -33,7 +37,7 @@ To locally install, run
 python -m pip install -e ".[dev,doc]" --config-settings editable_mode=compat
 ```
 
-## Running the tests
+## Running the Tests
 
 Please make sure that the package is installed with `.[dev]`, then run
 
@@ -61,14 +65,13 @@ coverage html
 
 then open the HTML file in your browser.
 
-## Building the docs
+## Building the Documentation
 
 ```console
-cd docs
-make html
+tox -edocs
 ```
 
-## Deployment flow
+## Deployment Flow
 
 - Check that unit testing on Windows and MacOs do not fail.
 
@@ -88,7 +91,7 @@ the workflow is setup to auto publish to both PyPI and GitHub's Releases.
 However, if the workflow is breaking, for example, you can run these
 commands to manually publish.
 
-#### Publish to the real PyPI
+#### Publish to the Real PyPI
 
 Make sure you build the package.
 
@@ -96,10 +99,27 @@ Make sure you build the package.
 python -m twine upload dist/*
 ```
 
-#### Publish to the test PyPI
+#### Publish to the Test PyPI
 
 If you want to test something out.
 
 ```console
 python -m twine upload -r testpypi dist/*
+```
+
+## Pinning the Dependencies
+
+After new depenency is added, please pin the dependencies by running
+
+```console
+python -m piptools compile -o requirements.txt pyproject.toml
+python -m piptools compile --extra=dev --output-file=dev-requirements.txt pyproject.toml
+```
+
+Please install [`pip-tools`](https://pypi.org/project/pip-tools/) if it is not installed.
+
+## Update the Pinned Dependencies
+
+```console
+python -m piptools compile --upgrade
 ```
