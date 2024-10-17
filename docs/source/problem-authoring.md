@@ -6,7 +6,7 @@ This section outlines how to structure a problem.
 
 The following structure is the problem when it is deployed in an assignment.
 
-```plain
+```
 problem-name/                    - Root of the problem folder.
 problem-name/README.md           - Contain instructions for the problem.
 problem-name/scripts/grade.py    - Contains the grading script to be run by `grading.yml` workflow.
@@ -16,7 +16,7 @@ problem-name/problem.toml        - A metadata file of the problem. See its own s
 
 When the problem is in the catalog, it will be in this structure.
 
-```plain
+```
 problem-name/                    - Root of the problem folder in the catalog.
 problem-name/README.md           - Contain instructions for the problem.
 problem-name/problem-name/       - A folder contains content in the previous structure.
