@@ -37,7 +37,7 @@ Documentation = "https://grading-lib.readthedocs.io/en/latest/"
 Changelog = "https://github.com/OU-CS3560/cs3560-grading-lib/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
-include = ["cs3560cli*"]
+include = ["grading_lib*"]
 
 [tool.setuptools.dynamic]
 version = { file = "grading_lib/VERSION" }
