@@ -147,6 +147,7 @@ class MinimalistTestResult(unittest.TextTestResult):
         # Points tracking.
         self.points = 0.0
         self.total_points = 0.0
+        self.point_breakdowns: dict[str, tuple[float, float]] = {}
 
     def getDescription(self, test: unittest.TestCase) -> str:
         doc_first_line = test.shortDescription()
@@ -155,17 +156,21 @@ class MinimalistTestResult(unittest.TextTestResult):
         else:
             return str(test)
 
-    def startTest(self, test: unittest.TestCase):
+    def startTest(self, test: unittest.TestCase) -> None:
         super().startTest(test)
         test_method = getattr(test, test._testMethodName)
         if hasattr(test_method, "__gradinglib_points"):
-            self.total_points += getattr(test_method, "__gradinglib_points")
+            points = getattr(test_method, "__gradinglib_points")
+            self.total_points += points
+            self.point_breakdowns[test._testMethodName] = (0.0, points)
 
-    def addSuccess(self, test: unittest.TestCase):
+    def addSuccess(self, test: unittest.TestCase) -> None:
         super().addSuccess(test)
         test_method = getattr(test, test._testMethodName)
         if hasattr(test_method, "__gradinglib_points"):
-            self.points += getattr(test_method, "__gradinglib_points")
+            points = getattr(test_method, "__gradinglib_points")
+            self.points += points
+            self.point_breakdowns[test._testMethodName] = (points, points)
 
     def addFailure(self, test: unittest.TestCase, err) -> None:
         self.failures.append((test, str(err[1]) + "\n"))

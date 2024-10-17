@@ -7,6 +7,7 @@ from pathlib import Path
 
 import click
 
+from .. import __version__
 from ..common import MinimalistTestResult, MinimalistTestRunner
 from ..util import FindProblemList, get_problem_total_points, load_problems_metadata
 from .dev import dev
@@ -23,6 +24,46 @@ def cli() -> None:
 def show_help(ctx: click.Context) -> None:
     """Show this help messages."""
     click.echo(cli.get_help(ctx))
+
+
+@cli.command(name="version")
+@click.pass_context
+def show_version(ctx: click.Context) -> None:
+    """Show the version."""
+    click.echo(__version__)
+
+
+@cli.command(name="generate")
+@click.argument("problem_name", type=str)
+@click.option(
+    "--force",
+    "-f",
+    type=bool,
+    is_flag=True,
+    default=False,
+    help="Skip the review step and run generate.py.",
+)
+@click.option(
+    "--catalog",
+    "-c",
+    type=click.Path(exists=True, dir_okay=True, file_okay=False),
+    default=None,
+    help="Folder of hw-problem-catalog repository.",
+)
+@click.pass_context
+def generate_command(
+    ctx: click.Context,
+    problem_name: str,
+    force: bool = False,
+    catalog: Path | str | None = None,
+) -> None:
+    """
+    Run generate.py of the PROBLEM_NAME from the HW_PROBLEM_CATAGLOG.
+
+    Caution: This will run code in generete.py of the problem. Please
+    make sure that you review the code.
+    """
+    pass
 
 
 @cli.command(name="summary")
@@ -127,11 +168,17 @@ def grade_command(path: str | Path) -> None:
 
     # Summary.
     print("==== Summary ====")
-    total_points = sum([test_program.result.total_points for _, test_program in test_programs])
+    total_points = sum(
+        [test_program.result.total_points for _, test_program in test_programs]
+    )
     student_total_points = 0.0
     for idx, item in enumerate(test_programs, start=1):
         problem_name, test_program = item
-        print(f"{idx:>3} - {problem_name:<30}{test_program.result.points:>5} / {test_program.result.total_points:>5}")
+        print(
+            f"{idx:>3} - {problem_name:<30}{test_program.result.points:>5} / {test_program.result.total_points:>5}"
+        )
+        for key, val in test_program.result.point_breakdowns.items():
+            print(f"      - {key:<50}{val[0]:>5} / {val[1]:>5}")
         student_total_points += test_program.result.points
     print(f"Total: {student_total_points:>5} / {total_points:>5}")
 
