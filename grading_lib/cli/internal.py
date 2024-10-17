@@ -49,7 +49,7 @@ def collect_autograding_tests_command(
 
             if "tests" in data["problem"]:
                 for _, test_data in data["problem"]["tests"].items():
-                    # Modify the run command by preprend it with the
+                    # Modify the run command by prepend it with the
                     # cd command.
                     test = dict()
                     test.update(test_data)

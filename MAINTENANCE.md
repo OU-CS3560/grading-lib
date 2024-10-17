@@ -85,7 +85,7 @@ make html
 There should be no need of running these commands manually now that
 the workflow is setup to auto publish to both PyPI and GitHub's Releases.
 
-Howver, if the workflow is breaking, for example, you can run these
+However, if the workflow is breaking, for example, you can run these
 commands to manually publish.
 
 #### Publish to the real PyPI

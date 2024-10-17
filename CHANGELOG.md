@@ -80,7 +80,7 @@ Please see changelog from v0.1.1a1 to v0.1.1rc3.
 - Add `ensure_lf_line_ending`.
 - Account for the different of `tempfile.TemporaryDirectory` between 3.12 and 3.10.
 - Add `BaseTestCase.assertArchiveFileIsGzip`
-- Add sanity checks to `Repository` wheh working with `.tar.gz` file.
+- Add sanity checks to `Repository` when working with `.tar.gz` file.
 - Add `Repository.run_executable` where `cwd` is always set to working directory of the repository.
 - Remove extra dependencies `doc` since we cannot list Git repository as a dependency and upload to PyPI.
 

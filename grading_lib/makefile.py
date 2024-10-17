@@ -36,7 +36,7 @@ def run_targets(
     Invoke the target(s) in the Makefile.
 
     Return True if the call is successful, False otherwise.
-    Also return the output of the executation.
+    Also return the output of the execution.
     """
     return run_executable(
         ["make", "-f", makefile_name, *targets], cwd=cwd, timeout=timeout

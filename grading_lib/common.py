@@ -48,7 +48,7 @@ def is_debug_mode(
     variable_name: str = "DEBUG",
     vals_for_true: tuple[str, ...] = ("true", "t", "on", "1"),
 ) -> bool:
-    """Return True if the DEBUG envrionment variable is presence with value representing 'True'."""
+    """Return True if the DEBUG environment variable is presence with value representing 'True'."""
     raw_val = os.environ.get(variable_name, None)
 
     if raw_val is not None:

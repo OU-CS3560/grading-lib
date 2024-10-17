@@ -91,7 +91,7 @@ class Repository:
                 "A repository must have a working tree directory (Repo.working_tree_dir must not be None)."
             )
 
-        # Some git commands when run on GitHub's Actions need a user's indentity.
+        # Some git commands when run on GitHub's Actions need a user's identity.
         with self.repo.config_writer(config_level="repository") as conf_writer:
             conf_writer.set_value("user", "name", "ou-cs3560-grading-script")
             conf_writer.set_value("user", "email", "cs3560-grading-script@ohio.edu")

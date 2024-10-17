@@ -35,7 +35,7 @@ to the student points. They exist so that we can ensure that the grading script 
 
 `expected-result` is used to tell if the grading script behave correctly or not.
 
-`path` is a path to the file that its content will be overriden with value in the `content` key.
+`path` is a path to the file that its content will be overridden with value in the `content` key.
 
 `content` can be a plain text or encrypted text. When in plain text, it can be used to override
 the content of file at `path`. Then the grading script can be run against this new content to verify if the script behave as designed or not.
