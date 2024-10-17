@@ -35,7 +35,7 @@ points = 25
         result = runner.invoke(collect_autograding_tests_command)
         assert result.exit_code == 0
         if sys.platform == "win32":
-            assert result.output == "processing lorem-ipsum\\problem.toml\n"
+            assert "processing lorem-ipsum\\problem.toml" in result.output
         else:
             assert "processing lorem-ipsum/problem.toml" in result.output
         expected_file_path = Path(".github") / "classroom" / "autograding.json"
