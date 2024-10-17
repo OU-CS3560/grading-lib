@@ -9,17 +9,26 @@ Note that the log for version before v0.1.1 may not be in the mentioned format.
 
 ## [Unreleased]
 
+## v0.1.2rc1 - 2024-10-17
+
+### Added
+
+- Add breakdown of points' sources to the summary section of the `grade` command.
+
+### Changed
+
+- Fix typos.
+- Deprecate `internal collect-autograding-tests` command.
+
+### Removed
+
+- Remove `tools` and `tools.collect_autograding_tests`.
+
 ## v0.1.2a4 - 2024-10-01
 
 ### Changed
 
 - Force `sys.stdout` for `MinimalistTestRunner.stream` to prevent stdout and stderr weaving output on GitHub Actions.
-- Fix typos.
-- Deprecate `internal collect-autograding-tests` command.
-
-### Removed 
-
-- Remove `tools` and `tools.collect_autograding_tests`.
 
 ## v0.1.2a3 - 2024-10-01
 
